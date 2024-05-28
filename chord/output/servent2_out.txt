@@ -1,0 +1,5 @@
+11:38:12 - Starting servent [4|localhost|1300]
+11:38:12 - Pausing for 30000 ms
+11:38:13 - Sending message [4|1300|0||NEW_NODE|1200|48]
+11:38:42 - Pausing for 10000 ms
+11:38:52 - Stopping...

@@ -1,0 +1,11 @@
+11:38:12 - Starting servent [48|localhost|1200]
+11:38:12 - Pausing for 40000 ms
+11:38:12 - First node in Chord system.
+11:38:13 - Got message [4|1300|0||NEW_NODE|1200|48]
+11:38:13 - Got message [28|1100|0||NEW_NODE|1200|48]
+11:38:13 - Got message [0|1600|0||NEW_NODE|1200|48]
+11:38:13 - Got message [24|1400|0||NEW_NODE|1200|48]
+11:38:52 - Pausing for 5000 ms
+11:38:57 - No such key: 2
+11:38:57 - Pausing for 5000 ms
+11:39:02 - Stopping...
