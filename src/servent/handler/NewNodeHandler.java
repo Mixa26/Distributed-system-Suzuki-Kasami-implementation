@@ -13,6 +13,7 @@ import java.util.Scanner;
 import app.AppConfig;
 import app.MyFile;
 import app.ServentInfo;
+import app.Token;
 import servent.message.*;
 import servent.message.util.MessageUtil;
 
@@ -94,8 +95,8 @@ public class NewNodeHandler implements MessageHandler {
                         // Give token to the first chord in queue
                         if (!AppConfig.chordState.token.queue.isEmpty()) {
                             int sendTokenTo = AppConfig.chordState.token.queue.remove();
-                            System.out.println("GIVING TOKEN TO ");
-                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), sendTokenTo, AppConfig.chordState.token);
+                            System.out.println("GIVING TOKEN TO " + AppConfig.getInfoById(sendTokenTo).getListenerPort());
+                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(sendTokenTo).getListenerPort(), AppConfig.chordState.token);
                             MessageUtil.sendMessage(tokenMessage);
                             // I sent the token and don't have it anymore
                             AppConfig.chordState.token = null;
@@ -163,7 +164,7 @@ public class NewNodeHandler implements MessageHandler {
                     WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
                     MessageUtil.sendMessage(wm);
                     // Wait for all the update messages to finish
-                    while (AppConfig.chordState.updatesCollected.get() < AppConfig.chordState.chordsInSystem.get()) {
+                    synchronized (AppConfig.chordState.updatesSync){
                         try {
                             System.out.println("WAITING FOR UPDATES");
                             AppConfig.chordState.updatesSync.wait();
@@ -171,7 +172,6 @@ public class NewNodeHandler implements MessageHandler {
                             throw new RuntimeException(e);
                         }
                     }
-                    System.out.println("AMOUNT OF UPDATES " + AppConfig.chordState.updatesCollected.get() + " CHORDS IN SYSTEM " + AppConfig.chordState.chordsInSystem.get());
                     // All updates finished, safe to give token to someone else
                     System.out.println("GOT ALL UPDATES");
                     // Mark in the token that my critical section is over
@@ -190,7 +190,7 @@ public class NewNodeHandler implements MessageHandler {
                         if (!AppConfig.chordState.token.queue.isEmpty()) {
                             int sendTokenTo = AppConfig.chordState.token.queue.remove();
                             System.out.println("GIVING TOKEN TO " + AppConfig.getInfoById(sendTokenTo).getListenerPort());
-                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), sendTokenTo, AppConfig.chordState.token);
+                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(sendTokenTo).getListenerPort(), new Token(AppConfig.chordState.token));
                             MessageUtil.sendMessage(tokenMessage);
                             // I sent the token and don't have it anymore
                             AppConfig.chordState.token = null;

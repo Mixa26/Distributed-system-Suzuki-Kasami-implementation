@@ -5,6 +5,7 @@ import java.util.List;
 
 import app.AppConfig;
 import app.ServentInfo;
+import servent.message.AllUpdatesDoneMessage;
 import servent.message.Message;
 import servent.message.MessageType;
 import servent.message.UpdateMessage;
@@ -48,11 +49,8 @@ public class UpdateHandler implements MessageHandler {
 				AppConfig.chordState.updatesCollected.incrementAndGet();
 
 				System.out.println("I SHOULD NOTIFY?");
-				AppConfig.chordState.updatesSync.notify();
-				if (allNodes.size() == AppConfig.chordState.chordsInSystem.get()) {
-					System.out.println("NOTIFY!!!!!");
-
-				}
+				AllUpdatesDoneMessage allUpdatesDoneMessage = new AllUpdatesDoneMessage(AppConfig.myServentInfo.getListenerPort(), Integer.parseInt(ports[0]));
+				MessageUtil.sendMessage(allUpdatesDoneMessage);
 			}
 		} else {
 			AppConfig.timestampedErrorPrint("Update message handler got message that is not UPDATE");

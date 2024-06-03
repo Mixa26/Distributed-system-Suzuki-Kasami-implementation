@@ -64,8 +64,6 @@ public class ChordState {
 
 	public AtomicBoolean chordLock;
 
-	public final Object tokenWait = new Object();
-
 	public final Object tokenRequestsLock = new Object();
 
 	public Map<Integer, Integer> tokenRequests;
