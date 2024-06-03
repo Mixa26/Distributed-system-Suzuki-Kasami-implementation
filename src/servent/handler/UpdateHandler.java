@@ -13,19 +13,19 @@ import servent.message.util.MessageUtil;
 public class UpdateHandler implements MessageHandler {
 
 	private Message clientMessage;
-	
+
 	public UpdateHandler(Message clientMessage) {
 		this.clientMessage = clientMessage;
 	}
-	
+
 	@Override
 	public void run() {
 		if (clientMessage.getMessageType() == MessageType.UPDATE) {
 			if (clientMessage.getSenderPort() != AppConfig.myServentInfo.getListenerPort()) {
-				ServentInfo newNodInfo = new ServentInfo(AppConfig.myServentInfo.getIpAddress(), clientMessage.getSenderPort());
+				ServentInfo newNodInfo = new ServentInfo(AppConfig.myServentInfo.getIpAddress(), clientMessage.getSenderPort(), AppConfig.getIdByPort(clientMessage.getSenderPort()));
 				List<ServentInfo> newNodes = new ArrayList<>();
 				newNodes.add(newNodInfo);
-				
+
 				AppConfig.chordState.addNodes(newNodes);
 				String newMessageText = "";
 				if (clientMessage.getMessageText().equals("")) {
@@ -39,12 +39,20 @@ public class UpdateHandler implements MessageHandler {
 			} else {
 				String messageText = clientMessage.getMessageText();
 				String[] ports = messageText.split(",");
-				
+
 				List<ServentInfo> allNodes = new ArrayList<>();
 				for (String port : ports) {
-					allNodes.add(new ServentInfo( AppConfig.myServentInfo.getIpAddress(), Integer.parseInt(port)));
+					allNodes.add(new ServentInfo( AppConfig.myServentInfo.getIpAddress(), Integer.parseInt(port), AppConfig.getIdByPort(Integer.parseInt(port))));
 				}
 				AppConfig.chordState.addNodes(allNodes);
+				AppConfig.chordState.updatesCollected.incrementAndGet();
+
+				System.out.println("I SHOULD NOTIFY?");
+				AppConfig.chordState.updatesSync.notify();
+				if (allNodes.size() == AppConfig.chordState.chordsInSystem.get()) {
+					System.out.println("NOTIFY!!!!!");
+
+				}
 			}
 		} else {
 			AppConfig.timestampedErrorPrint("Update message handler got message that is not UPDATE");

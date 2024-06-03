@@ -8,7 +8,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -22,6 +24,8 @@ public class AppConfig {
 	 * Convenience access for this servent's information
 	 */
 	public static ServentInfo myServentInfo;
+
+	private static List<ServentInfo> serventInfoList = new ArrayList<>();
 	
 	/**
 	 * Print a message to stdout with a timestamp
@@ -133,11 +137,27 @@ public class AppConfig {
 			timestampedErrorPrint("Problem reading chord_size. Must be a number that is a power of 2. Exiting...");
 			System.exit(0);
 		}
-		
+
+		for (int i = 0; i < SERVENT_COUNT; i++) {
+			String portProperty = "servent"+i+".port";
+
+			int serventPort = -1;
+
+			try {
+				serventPort = Integer.parseInt(properties.getProperty(portProperty));
+			} catch (NumberFormatException e) {
+				timestampedErrorPrint("Problem reading " + portProperty + ". Exiting...");
+				System.exit(0);
+			}
+
+			ServentInfo newInfo = new ServentInfo(ip, serventPort, serventId);
+			serventInfoList.add(newInfo);
+		}
+
 		String portProperty = "servent"+serventId+".port";
-		
+
 		int serventPort = -1;
-		
+
 		try {
 			serventPort = Integer.parseInt(properties.getProperty(portProperty));
 		} catch (NumberFormatException e) {
@@ -145,7 +165,39 @@ public class AppConfig {
 			System.exit(0);
 		}
 		
-		myServentInfo = new ServentInfo(ip, serventPort);
+		myServentInfo = new ServentInfo(ip, serventPort, serventId);
 	}
-	
+
+	/**
+	 * Get info for a servent selected by a given id.
+	 * @param id id of servent to get info for
+	 * @return {@link ServentInfo} object for this id
+	 */
+	public static ServentInfo getInfoById(int id) {
+		if (id >= getServentCount()) {
+			throw new IllegalArgumentException(
+					"Trying to get info for servent " + id + " when there are " + getServentCount() + " servents.");
+		}
+		return serventInfoList.get(id);
+	}
+
+	/**
+	 * Get number of servents in this system.
+	 */
+	public static int getServentCount() {
+		return serventInfoList.size();
+	}
+
+	public static List<ServentInfo> getServentInfoList() {
+		return serventInfoList;
+	}
+
+	public static int getIdByPort(int port){
+		for (ServentInfo servent : serventInfoList) {
+			if (servent.getListenerPort() == port){
+				return servent.getId();
+			}
+		}
+		return -1;
+	}
 }

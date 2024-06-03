@@ -3,6 +3,7 @@ package servent.handler;
 import java.util.Map;
 
 import app.AppConfig;
+import app.MyFile;
 import app.ServentInfo;
 import servent.message.AskGetMessage;
 import servent.message.Message;
@@ -24,8 +25,8 @@ public class AskGetHandler implements MessageHandler {
 			try {
 				int key = Integer.parseInt(clientMessage.getMessageText());
 				if (AppConfig.chordState.isKeyMine(key)) {
-					Map<Integer, Integer> valueMap = AppConfig.chordState.getValueMap(); 
-					int value = -1;
+					Map<Integer, MyFile> valueMap = AppConfig.chordState.getValueMap();
+					MyFile value = null;
 					
 					if (valueMap.containsKey(key)) {
 						value = valueMap.get(key);

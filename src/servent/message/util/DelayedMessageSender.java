@@ -3,6 +3,7 @@ package servent.message.util;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLOutput;
 
 import app.AppConfig;
 import servent.message.Message;
@@ -17,11 +18,11 @@ import servent.message.Message;
 public class DelayedMessageSender implements Runnable {
 
 	private Message messageToSend;
-	
+
 	public DelayedMessageSender(Message messageToSend) {
 		this.messageToSend = messageToSend;
 	}
-	
+
 	public void run() {
 		/*
 		 * A random sleep before sending.
@@ -32,22 +33,22 @@ public class DelayedMessageSender implements Runnable {
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		if (MessageUtil.MESSAGE_UTIL_PRINTING) {
 			AppConfig.timestampedStandardPrint("Sending message " + messageToSend);
 		}
-		
+
 		try {
 			Socket sendSocket = new Socket(messageToSend.getReceiverIpAddress(), messageToSend.getReceiverPort());
-			
+
 			ObjectOutputStream oos = new ObjectOutputStream(sendSocket.getOutputStream());
 			oos.writeObject(messageToSend);
 			oos.flush();
-			
+
 			sendSocket.close();
 		} catch (IOException e) {
 			AppConfig.timestampedErrorPrint("Couldn't send message: " + messageToSend.toString());
 		}
 	}
-	
+
 }

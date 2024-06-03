@@ -9,11 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BootstrapServer {
 
 	private volatile boolean working = true;
 	private List<Integer> activeServents;
+
+	private final Object nodeAddedSync = new Object();
+
+	private AtomicBoolean nodeAddedLock;
 
 	private class CLIWorker implements Runnable {
 		@Override
@@ -34,29 +39,20 @@ public class BootstrapServer {
 		}
 	}
 
-	public BootstrapServer() {
-		activeServents = new ArrayList<>();
-	}
+	private class ChordAdder implements Runnable {
 
-	public void doBootstrap(int bsPort) {
-		Thread cliThread = new Thread(new CLIWorker());
-		cliThread.start();
+		private Socket newServentSocket;
 
-		ServerSocket listenerSocket = null;
-		try {
-			listenerSocket = new ServerSocket(bsPort);
-			//listenerSocket.setSoTimeout(1000);
-		} catch (IOException e1) {
-			AppConfig.timestampedErrorPrint("Problem while opening listener socket.");
-			System.exit(0);
+		private Random rand;
+
+		public ChordAdder(Socket newServentSocket) {
+			this.newServentSocket = newServentSocket;
+			rand = new Random(System.currentTimeMillis());
 		}
 
-		Random rand = new Random(System.currentTimeMillis());
-
-		while (working) {
+		@Override
+		public void run() {
 			try {
-				Socket newServentSocket = listenerSocket.accept();
-
 				Scanner socketScanner = new Scanner(newServentSocket.getInputStream());
 				String message = socketScanner.nextLine();
 
@@ -66,32 +62,107 @@ public class BootstrapServer {
 				 * or -1 if he is the first one.
 				 */
 				if (message.equals("Hail")) {
-					int newServentPort = socketScanner.nextInt();
+					// Wait for the previous node to be added
+					System.out.println("LOCKING NODE ADDER");
+					synchronized (nodeAddedSync) {
+						while (nodeAddedLock.get()) {
+							try {
+								nodeAddedSync.wait();
+							} catch (InterruptedException e) {
+								throw new RuntimeException(e);
+							}
+						}
+						// Set that we're adding a new node
+						nodeAddedLock.set(true);
 
-					System.out.println("got " + newServentPort);
-					PrintWriter socketWriter = new PrintWriter(newServentSocket.getOutputStream());
+						int newServentPort = socketScanner.nextInt();
 
-					if (activeServents.size() == 0) {
-						socketWriter.write(String.valueOf(-1) + "\n");
-						activeServents.add(newServentPort); //first one doesn't need to confirm
-					} else {
-						int randServent = activeServents.get(rand.nextInt(activeServents.size()));
-						socketWriter.write(String.valueOf(randServent) + "\n");
+						System.out.println("got " + newServentPort);
+						PrintWriter socketWriter = new PrintWriter(newServentSocket.getOutputStream());
+
+						if (activeServents.size() == 0) {
+							socketWriter.write(String.valueOf(-1) + "\n");
+							System.out.println("adding " + newServentPort);
+							activeServents.add(newServentPort); //first one doesn't need to confirm
+							nodeAddedLock.set(false);
+							System.out.println("UNLOCKING NODE ADDER FROM FIRST!!!");
+						} else {
+							int randServent = activeServents.get(rand.nextInt(activeServents.size()));
+							socketWriter.write(String.valueOf(randServent) + "\n");
+						}
+
+						socketWriter.flush();
+						newServentSocket.close();
 					}
-
-					socketWriter.flush();
-					newServentSocket.close();
 				} else if (message.equals("New")) {
 					/**
 					 * When a servent is confirmed not to be a collider, we add him to the list.
 					 */
-					int newServentPort = socketScanner.nextInt();
+					// Signal the previous node has been added.
+					System.out.println("BEFORE NEW");
+					synchronized (nodeAddedSync) {
+						System.out.println("IN NEW");
+						if (!nodeAddedLock.get()) {
+							System.err.println("NODE LOCK WASN'T SET IN BOOTSTRAP WHILE ADDING NODE!");
+						}
+						int newServentPort = socketScanner.nextInt();
 
-					System.out.println("adding " + newServentPort);
+						System.out.println("adding " + newServentPort);
 
-					activeServents.add(newServentPort);
-					newServentSocket.close();
+						activeServents.add(newServentPort);
+						newServentSocket.close();
+
+						// Tell bootstrap to continue adding nodes.
+						nodeAddedLock.set(false);
+						nodeAddedSync.notify();
+					}
+					System.out.println("UNLOCKING NODE ADDER");
+				} else if (message.equals("Sorry")) {
+					System.out.println("BEFORE SORRY");
+					// Signal the previous node hasn't been added.
+					synchronized (nodeAddedSync) {
+						System.out.println("IN SORRY");
+						if (!nodeAddedLock.get()) {
+							System.err.println("NODE LOCK WASN'T SET IN BOOTSTRAP WHILE ADDING NODE!");
+						}
+
+						// Tell bootstrap to continue adding nodes.
+						nodeAddedLock.set(false);
+						nodeAddedSync.notify();
+					}
+					System.out.println("UNLOCKING NODE ADDER");
 				}
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public BootstrapServer() {
+		activeServents = new ArrayList<>();
+		nodeAddedLock = new AtomicBoolean(false);
+	}
+
+	public void doBootstrap(int bsPort) {
+		Thread cliThread = new Thread(new CLIWorker());
+		cliThread.start();
+
+		ServerSocket listenerSocket = null;
+		try {
+			listenerSocket = new ServerSocket(bsPort, 100);
+			//listenerSocket.setSoTimeout(1000);
+		} catch (IOException e1) {
+			AppConfig.timestampedErrorPrint("Problem while opening listener socket.");
+			System.exit(0);
+		}
+
+		while (working) {
+			try {
+				Socket newServentSocket = listenerSocket.accept();
+
+				Thread chordAdder = new Thread(new ChordAdder(newServentSocket));
+
+				chordAdder.start();
 
 			} catch (SocketTimeoutException e) {
 

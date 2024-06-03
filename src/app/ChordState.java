@@ -1,5 +1,6 @@
 package app;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,7 +10,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import servent.message.AskGetMessage;
 import servent.message.PutMessage;
@@ -54,15 +58,27 @@ public class ChordState {
 	//we DO NOT use this to send messages, but only to construct the successor table
 	private List<ServentInfo> allNodeInfo;
 	
-	private Map<Integer, Integer> valueMap;
+	private Map<Integer, MyFile> valueMap;
 
 	public final Object chordSync = new Object();
 
 	public AtomicBoolean chordLock;
 
-	public final Object predecessorSync = new Object();
+	public final Object tokenWait = new Object();
 
-	public AtomicBoolean predecessorLock;
+	public final Object tokenRequestsLock = new Object();
+
+	public Map<Integer, Integer> tokenRequests;
+
+	public Token token;
+
+	public AtomicInteger chordsInSystem;
+
+	public AtomicInteger updatesCollected;
+
+	public List<Integer> friendChords;
+
+	public final Object updatesSync = new Object();
 	
 	public ChordState() {
 		this.chordLevel = 1;
@@ -82,9 +98,16 @@ public class ChordState {
 		
 		predecessorInfo = null;
 		valueMap = new HashMap<>();
-		allNodeInfo = new ArrayList<>();
+		allNodeInfo = new CopyOnWriteArrayList<>();
 		chordLock = new AtomicBoolean(false);
-		predecessorLock = new AtomicBoolean(false);
+		tokenRequests = new HashMap<>();
+		for (int i = 0; i < AppConfig.SERVENT_COUNT; i++){
+			tokenRequests.put(i, 0);
+		}
+		token = null;
+		chordsInSystem = new AtomicInteger(0);
+		updatesCollected = new AtomicInteger(0);
+		friendChords = new CopyOnWriteArrayList<>();
 	}
 	
 	/**
@@ -94,7 +117,7 @@ public class ChordState {
 	 */
 	public void init(WelcomeMessage welcomeMsg) {
 		//set a temporary pointer to next node, for sending of update message
-		successorTable[0] = new ServentInfo("localhost", welcomeMsg.getSenderPort());
+		successorTable[0] = new ServentInfo("localhost", welcomeMsg.getSenderPort(), AppConfig.getIdByPort(welcomeMsg.getSenderPort()));
 		this.valueMap = welcomeMsg.getValues();
 		
 		//tell bootstrap this node is not a collider
@@ -133,11 +156,15 @@ public class ChordState {
 		this.predecessorInfo = newNodeInfo;
 	}
 
-	public Map<Integer, Integer> getValueMap() {
+	public Map<Integer, MyFile> getValueMap() {
 		return valueMap;
 	}
-	
-	public void setValueMap(Map<Integer, Integer> valueMap) {
+
+	public List<ServentInfo> getAllNodeInfo() {
+		return allNodeInfo;
+	}
+
+	public void setValueMap(Map<Integer, MyFile> valueMap) {
 		this.valueMap = valueMap;
 	}
 	
@@ -322,7 +349,7 @@ public class ChordState {
 	/**
 	 * The Chord put operation. Stores locally if key is ours, otherwise sends it on.
 	 */
-	public void putValue(int key, int value) {
+	public void putValue(int key, MyFile value) {
 		if (isKeyMine(key)) {
 			valueMap.put(key, value);
 		} else {
@@ -340,12 +367,12 @@ public class ChordState {
 	 *			<li>-2 if we asked someone else</li>
 	 *		   </ul>
 	 */
-	public int getValue(int key) {
+	public MyFile getValue(int key) {
 		if (isKeyMine(key)) {
 			if (valueMap.containsKey(key)) {
 				return valueMap.get(key);
 			} else {
-				return -1;
+				return new MyFile(null, FileType.PUBLIC);
 			}
 		}
 		
@@ -353,7 +380,7 @@ public class ChordState {
 		AskGetMessage agm = new AskGetMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), String.valueOf(key));
 		MessageUtil.sendMessage(agm);
 		
-		return -2;
+		return null;
 	}
 
 }

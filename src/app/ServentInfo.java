@@ -13,11 +13,14 @@ public class ServentInfo implements Serializable {
 	private final String ipAddress;
 	private final int listenerPort;
 	private final int chordId;
+
+	private final int id;
 	
-	public ServentInfo(String ipAddress, int listenerPort) {
+	public ServentInfo(String ipAddress, int listenerPort, int id) {
 		this.ipAddress = ipAddress;
 		this.listenerPort = listenerPort;
 		this.chordId = ChordState.chordHash(listenerPort);
+		this.id = id;
 	}
 
 	public String getIpAddress() {
@@ -32,6 +35,9 @@ public class ServentInfo implements Serializable {
 		return chordId;
 	}
 
+	public int getId() {
+		return id;
+	}
 
 	@Override
 	public String toString() {

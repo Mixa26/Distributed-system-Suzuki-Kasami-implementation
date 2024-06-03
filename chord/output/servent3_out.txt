@@ -1,5 +1,17 @@
-11:38:12 - Starting servent [24|localhost|1400]
-11:38:12 - Pausing for 20000 ms
-11:38:13 - Sending message [24|1400|0||NEW_NODE|1200|48]
-11:38:32 - Pausing for 10000 ms
-11:38:42 - Stopping...
+15:29:10 - Starting servent [24|localhost|1400]
+15:29:10 - Pausing for 20000 ms
+15:29:12 - Got message [4|1300|4||TOKEN_REQUEST|1400|24]
+My RN {0=0, 1=0, 2=1, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+CHORD 1600 IS ADDING ME
+15:29:16 - Sending message [24|1400|0||NEW_NODE|1600|0]
+15:29:17 - Got message [0|1600|5||TOKEN_REQUEST|1400|24]
+My RN {0=0, 1=0, 2=1, 3=0, 4=1}
+IN TOKEN REQUEST
+I dont have the token!
+15:29:18 - Got message [0|1600|6||WELCOME|1400|24]
+15:29:19 - Sending message [24|1400|1||UPDATE|1600|0]
+15:29:20 - Got message [24|1400|8|1600|UPDATE|1400|24]
+I SHOULD NOTIFY?
+15:29:30 - Pausing for 10000 ms

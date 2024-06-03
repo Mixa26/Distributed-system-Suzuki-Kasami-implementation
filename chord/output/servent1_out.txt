@@ -1,11 +1,22 @@
-11:38:12 - Starting servent [48|localhost|1200]
-11:38:12 - Pausing for 40000 ms
-11:38:12 - First node in Chord system.
-11:38:13 - Got message [4|1300|0||NEW_NODE|1200|48]
-11:38:13 - Got message [28|1100|0||NEW_NODE|1200|48]
-11:38:13 - Got message [0|1600|0||NEW_NODE|1200|48]
-11:38:13 - Got message [24|1400|0||NEW_NODE|1200|48]
-11:38:52 - Pausing for 5000 ms
-11:38:57 - No such key: 2
-11:38:57 - Pausing for 5000 ms
-11:39:02 - Stopping...
+15:29:00 - Starting servent [48|localhost|1200]
+15:29:00 - Pausing for 40000 ms
+CHORD 1100 IS ADDING ME
+15:29:02 - Sending message [48|1200|0||NEW_NODE|1100|28]
+15:29:02 - Got message [28|1100|0||WELCOME|1200|48]
+15:29:03 - Sending message [48|1200|1||UPDATE|1100|28]
+15:29:05 - Got message [48|1200|1|1100|UPDATE|1200|48]
+I SHOULD NOTIFY?
+15:29:07 - Got message [4|1300|3|1100|UPDATE|1200|48]
+15:29:07 - Sending message [4|1300|2|1100,1200|UPDATE|1300|4]
+15:29:13 - Got message [4|1300|3||TOKEN_REQUEST|1200|48]
+My RN {0=0, 1=0, 2=1, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+15:29:17 - Got message [0|1600|3||TOKEN_REQUEST|1200|48]
+My RN {0=0, 1=0, 2=1, 3=0, 4=1}
+IN TOKEN REQUEST
+I dont have the token!
+15:29:18 - Got message [0|1600|5|1300,1100|UPDATE|1200|48]
+15:29:19 - Sending message [0|1600|3|1300,1100,1200|UPDATE|1600|0]
+15:29:40 - Pausing for 5000 ms
+15:29:45 - Pausing for 5000 ms

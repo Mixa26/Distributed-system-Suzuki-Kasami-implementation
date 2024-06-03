@@ -72,6 +72,7 @@ public class MultipleServentStarter {
 		
 		Process bsProcess = null;
 		ProcessBuilder bsBuilder = new ProcessBuilder("java", "-cp", "out\\production\\KiDS-vezbe9", "app.BootstrapServer", String.valueOf(AppConfig.BOOTSTRAP_PORT));
+		bsBuilder.redirectOutput(new File(testName+"/output/bootstrap.txt"));
 		try {
 			bsProcess = bsBuilder.start();
 		} catch (IOException e1) {
@@ -105,6 +106,14 @@ public class MultipleServentStarter {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			if (i % 2 == 0) {
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+//			}
 //			try { //give each node 10s to start up
 //				Thread.sleep(10000);
 //			} catch (InterruptedException e) {

@@ -1,6 +1,7 @@
 package cli.command;
 
 import app.AppConfig;
+import app.MyFile;
 
 public class DHTGetCommand implements CLICommand {
 
@@ -14,11 +15,11 @@ public class DHTGetCommand implements CLICommand {
 		try {
 			int key = Integer.parseInt(args);
 			
-			int val = AppConfig.chordState.getValue(key);
+			MyFile val = AppConfig.chordState.getValue(key);
 			
-			if (val == -2) {
+			if (val == null) {
 				AppConfig.timestampedStandardPrint("Please wait...");
-			} else if (val == -1) {
+			} else if (val.getFile() == null) {
 				AppConfig.timestampedStandardPrint("No such key: " + key);
 			} else {
 				AppConfig.timestampedStandardPrint(key + ": " + val);

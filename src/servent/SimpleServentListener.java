@@ -79,12 +79,11 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				case TELL_GET:
 					messageHandler = new TellGetHandler(clientMessage);
 					break;
-				case LOCK:
-					messageHandler = new LockHandler(clientMessage);
+				case TOKEN_REQUEST:
+					messageHandler = new TokenRequestHandler(clientMessage);
 					break;
-				case UNLOCK:
-					messageHandler = new UnlockHandler(clientMessage);
-					break;
+				case TOKEN:
+					messageHandler = new TokenHandler(clientMessage);
 				case POISON:
 					break;
 				}
