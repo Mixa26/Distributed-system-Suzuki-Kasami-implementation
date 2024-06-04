@@ -10,8 +10,8 @@ public class AddFriendMessage extends BasicMessage {
     private boolean iAlreadyAddedYou;
 
     public AddFriendMessage(int senderPort, int receiverPort, boolean iAlreadyAddedYou) {
-        super(MessageType.WELCOME, senderPort, receiverPort);
-        this.chordID = ChordState.chordHash(receiverPort);
+        super(MessageType.ADD_FRIEND, senderPort, receiverPort);
+        this.chordID = ChordState.chordHash(senderPort);
         this.iAlreadyAddedYou = iAlreadyAddedYou;
     }
 

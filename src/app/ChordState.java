@@ -103,7 +103,7 @@ public class ChordState {
 		}
 		token = null;
 		friendChords = new CopyOnWriteArrayList<>();
-		myFilesInSystem = new ArrayList<>();
+		myFilesInSystem = new CopyOnWriteArrayList<>();
 		added = new AtomicBoolean(false);
 	}
 
@@ -356,6 +356,8 @@ public class ChordState {
 			}
 		}
 		System.out.println("PROCEEDING TO ADD THE FILE");
+		myFilesInSystem.add(value);
+		System.out.println("AFTER ADDING MY FILE SYSTEM " + myFilesInSystem);
 		if (isKeyMine(key)) {
 			valueMap.put(key, value);
 		} else {

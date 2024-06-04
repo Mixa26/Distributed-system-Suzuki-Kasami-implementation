@@ -10,7 +10,7 @@ public class ListFilesMessage extends BasicMessage{
     private List<MyFile> files;
 
     public ListFilesMessage(int senderPort, int receiverPort, List<MyFile> files) {
-        super(MessageType.ASK_GET, senderPort, receiverPort);
+        super(MessageType.LIST_FILES, senderPort, receiverPort);
         this.files = files;
     }
 

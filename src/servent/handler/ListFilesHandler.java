@@ -9,7 +9,7 @@ import servent.message.util.MessageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 public class ListFilesHandler implements MessageHandler{
 
@@ -25,19 +25,25 @@ public class ListFilesHandler implements MessageHandler{
             if (((ListFilesMessage) clientMessage).getFiles() == null) {
                 List<MyFile> allFiles = new ArrayList<>();
 
-                for (MyFile file : AppConfig.chordState.myFilesInSystem) {
-                    if (file.getAccess().equals(FileType.PUBLIC) || (file.getAccess().equals(FileType.PRIVATE) && AppConfig.chordState.friendChords.contains(ChordState.chordHash(clientMessage.getSenderPort())))){
-                        allFiles.add(file);
+                synchronized(AppConfig.chordState.successorLock) {
+                    System.out.println("MY FILE LIST " + AppConfig.chordState.myFilesInSystem);
+
+                    for (MyFile file : AppConfig.chordState.myFilesInSystem) {
+                        if (file.getAccess().equals(FileType.PUBLIC) || (file.getAccess().equals(FileType.PRIVATE) && AppConfig.chordState.friendChords.contains(ChordState.chordHash(clientMessage.getSenderPort())))) {
+                            System.out.println("ADDING FILE TO LIST TO SEND " + file);
+                            allFiles.add(file);
+                        }
                     }
                 }
 
+                System.out.println("SENDING MY FILE LIST TO " + clientMessage.getSenderPort());
                 Message allFilesMessage = new ListFilesMessage(AppConfig.myServentInfo.getListenerPort(), clientMessage.getSenderPort(), allFiles);
                 MessageUtil.sendMessage(allFilesMessage);
             }
             else {
                 AppConfig.timestampedStandardPrint("Files from " + clientMessage.getSenderPort() + " are:");
                 for (MyFile file : ((ListFilesMessage) clientMessage).getFiles()) {
-                    AppConfig.timestampedStandardPrint(file.getFile() + " | " + file.getAccess());
+                    AppConfig.timestampedStandardPrint("* " + file.getFile() + " | " + file.getAccess());
                 }
             }
         } else {

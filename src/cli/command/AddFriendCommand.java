@@ -1,10 +1,8 @@
 package cli.command;
 
 import app.AppConfig;
-import app.ChordState;
 import app.ServentInfo;
 import servent.message.AddFriendMessage;
-import servent.message.Message;
 import servent.message.util.MessageUtil;
 
 public class AddFriendCommand implements CLICommand{
@@ -30,6 +28,7 @@ public class AddFriendCommand implements CLICommand{
                 AppConfig.timestampedStandardPrint("No such port: " + port);
             }
 
+            System.out.println("SENDING FRIEND MESSAGE TO " + port);
             AddFriendMessage addFriendMessage = new AddFriendMessage(AppConfig.myServentInfo.getListenerPort(), port, false);
             MessageUtil.sendMessage(addFriendMessage);
 

@@ -3,6 +3,8 @@ package cli.command;
 
 import app.AppConfig;
 import servent.message.ListFilesMessage;
+import servent.message.Message;
+import servent.message.util.MessageUtil;
 
 public class ListFilesCommand implements CLICommand {
 
@@ -15,7 +17,9 @@ public class ListFilesCommand implements CLICommand {
     public void execute(String args) {
         try {
             int port = Integer.parseInt(args);
-            new ListFilesMessage(AppConfig.myServentInfo.getListenerPort(), port, null);
+            System.out.println("ASKING FOR LIST OF ALL FILES FROM " + port);
+            Message listFilesMessage = new ListFilesMessage(AppConfig.myServentInfo.getListenerPort(), port, null);
+            MessageUtil.sendMessage(listFilesMessage);
         } catch (NumberFormatException e){
             AppConfig.timestampedErrorPrint("Wrong format of port provided " + args + " in view_files command.");
         }

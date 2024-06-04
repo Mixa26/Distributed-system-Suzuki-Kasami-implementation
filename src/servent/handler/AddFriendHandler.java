@@ -9,7 +9,7 @@ public class AddFriendHandler implements MessageHandler {
 
     private Message clientMessage;
 
-    public AddFriendHandler() {
+    public AddFriendHandler(Message clientMessage) {
         this.clientMessage = clientMessage;
     }
 

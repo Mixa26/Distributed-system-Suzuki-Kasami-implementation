@@ -1,5 +1,5 @@
 pause 10000
-add_file 46.txt public
+add_file 46.txt private
 pause 20000
 get_file 25.txt
 pause 6000
