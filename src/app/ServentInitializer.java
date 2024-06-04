@@ -48,6 +48,7 @@ public class ServentInitializer implements Runnable {
 			synchronized (AppConfig.chordState.tokenRequestsLock) {
 				AppConfig.chordState.token = new Token();
 			}
+			AppConfig.chordState.added.set(true);
 			AppConfig.timestampedStandardPrint("First node in Chord system.");
 		} else { //bootstrap gave us something else - let that node tell our successor that we are here
 			NewNodeMessage nnm = new NewNodeMessage(AppConfig.myServentInfo.getListenerPort(), someServentPort);

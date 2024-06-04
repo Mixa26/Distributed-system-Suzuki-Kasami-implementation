@@ -1,27 +1,32 @@
-21:04:45 - Starting servent [24|localhost|1400]
-21:04:45 - Pausing for 50000000 ms
+15:54:53 - Starting servent [24|localhost|1400]
+15:54:53 - Pausing for 20000 ms
+15:54:55 - Got message [28|1100|7||TOKEN_REQUEST|1400|24]
+My RN {0=3, 1=0, 2=0, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+15:55:00 - Got message [48|1200|5||TOKEN_REQUEST|1400|24]
+My RN {0=3, 1=1, 2=0, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+15:55:04 - Got message [4|1300|13||TOKEN_REQUEST|1400|24]
+My RN {0=3, 1=1, 2=2, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
 CHORD 1300 IS ADDING ME
-21:04:47 - Sending message [24|1400|0||NEW_NODE|1300|4]
-21:04:48 - Got message [4|1300|4||TOKEN_REQUEST|1400|24]
-My RN {0=0, 1=0, 2=1, 3=0, 4=0}
+15:55:08 - Sending message [24|1400|0||NEW_NODE|1300|4]
+15:55:13 - Pausing for 10000 ms
+15:55:14 - Got message [28|1100|16||TOKEN_REQUEST|1400|24]
+My RN {0=4, 1=1, 2=2, 3=0, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-21:04:52 - Got message [28|1100|12||TOKEN_REQUEST|1400|24]
-My RN {0=3, 1=0, 2=1, 3=0, 4=0}
-IN TOKEN REQUEST
-I dont have the token!
-21:04:54 - Got message [28|1100|14||WELCOME|1400|24]
-21:04:54 - Sending message [24|1400|1|1100|UPDATE|1100|28]
-21:04:58 - Got message [24|1400|9|1100,1100,1200,1300|UPDATE|1400|24]
+15:55:15 - Got message [28|1100|18||WELCOME|1400|24]
+15:55:16 - Sending message [24|1400|1|1100|UPDATE|1100|28]
+15:55:21 - Got message [24|1400|19|1100,1100,1200,1600,1300|UPDATE|1400|24]
+NOTTTTTTTTTTTTTTTTTTTTTIIIIIIIIIIIIIIIIIIIIIIIIIII
 I SHOULD NOTIFY?
-21:04:59 - Sending message [24|1400|2||ALL_UPDATES_DONE|1100|28]
-21:05:01 - Got message [48|1200|13||TOKEN_REQUEST|1400|24]
-My RN {0=3, 1=2, 2=1, 3=0, 4=0}
-IN TOKEN REQUEST
-I dont have the token!
-21:05:04 - Got message [4|1300|12||TOKEN_REQUEST|1400|24]
-My RN {0=3, 1=2, 2=2, 3=0, 4=0}
-IN TOKEN REQUEST
-I dont have the token!
-21:05:07 - Got message [0|1600|15|1300,1300|UPDATE|1400|24]
-21:05:09 - Sending message [0|1600|3|1300,1300,1400|UPDATE|1100|28]
+15:55:22 - Sending message [24|1400|2||ALL_UPDATES_DONE|1100|28]
+15:55:23 - Pausing for 5000000 ms
+15:55:30 - Got message [48|1200|5|25|ASK_GET|1400|24]
+15:55:30 - Sending message [48|1200|3|25|ASK_GET|1100|28]
+15:55:33 - Got message [0|1600|6|25|ASK_GET|1400|24]
+15:55:34 - Sending message [0|1600|4|25|ASK_GET|1100|28]

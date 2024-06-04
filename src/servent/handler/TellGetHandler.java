@@ -1,8 +1,10 @@
 package servent.handler;
 
 import app.AppConfig;
+import app.MyFile;
 import servent.message.Message;
 import servent.message.MessageType;
+import servent.message.TellGetMessage;
 
 public class TellGetHandler implements MessageHandler {
 
@@ -15,21 +17,16 @@ public class TellGetHandler implements MessageHandler {
 	@Override
 	public void run() {
 		if (clientMessage.getMessageType() == MessageType.TELL_GET) {
-			String parts[] = clientMessage.getMessageText().split(":");
-			
-			if (parts.length == 2) {
-				try {
-					int key = Integer.parseInt(parts[0]);
-					int value = Integer.parseInt(parts[1]);
-					if (value == -1) {
-						AppConfig.timestampedStandardPrint("No such key: " + key);
-					} else {
-						AppConfig.timestampedStandardPrint(clientMessage.getMessageText());
-					}
-				} catch (NumberFormatException e) {
-					AppConfig.timestampedErrorPrint("Got TELL_GET message with bad text: " + clientMessage.getMessageText());
+
+			try {
+				int key = ((TellGetMessage)clientMessage).getKey();
+				MyFile value = ((TellGetMessage)clientMessage).getValue();
+				if (value == null) {
+					AppConfig.timestampedStandardPrint("No such key: " + key);
+				} else {
+					AppConfig.timestampedStandardPrint("Got key " + key + " with file " + value.getFile());
 				}
-			} else {
+			} catch (NumberFormatException e) {
 				AppConfig.timestampedErrorPrint("Got TELL_GET message with bad text: " + clientMessage.getMessageText());
 			}
 		} else {

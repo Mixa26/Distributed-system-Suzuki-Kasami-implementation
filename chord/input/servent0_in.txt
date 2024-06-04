@@ -1,2 +1,5 @@
-pause 50000000
+pause 5000
+add_file 25.txt public
 pause 10000
+get_file 46.txt
+pause 5000000

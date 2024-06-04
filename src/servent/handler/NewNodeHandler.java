@@ -105,98 +105,96 @@ public class NewNodeHandler implements MessageHandler {
 
                     return;
                 }
-                System.out.println("PART 2");
+
                 //check if he is my predecessor
                 boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
-                if (isMyPred) { //if yes, prepare and send welcome message
-                    ServentInfo hisPred = AppConfig.chordState.getPredecessor();
-                    if (hisPred == null) {
-                        hisPred = AppConfig.myServentInfo;
-                    }
+                    if (isMyPred) { //if yes, prepare and send welcome message
+                        Map<Integer, MyFile> hisValues = new HashMap<>();
 
-                    AppConfig.chordState.setPredecessor(newNodeInfo);
-
-                    Map<Integer, MyFile> myValues = AppConfig.chordState.getValueMap();
-                    Map<Integer, MyFile> hisValues = new HashMap<>();
-
-                    int myId = AppConfig.myServentInfo.getChordId();
-                    int hisPredId = hisPred.getChordId();
-                    int newNodeId = newNodeInfo.getChordId();
-
-                    for (Entry<Integer, MyFile> valueEntry : myValues.entrySet()) {
-                        if (hisPredId == myId) { //i am first and he is second
-                            if (myId < newNodeId) {
-                                if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > myId) {
-                                    hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-                                }
-                            } else {
-                                if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > myId) {
-                                    hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-                                }
-                            }
-                        }
-                        if (hisPredId < myId) { //my old predecesor was before me
-                            if (valueEntry.getKey() <= newNodeId) {
-                                hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-                            }
-                        } else { //my old predecesor was after me
-                            if (hisPredId > newNodeId) { //new node overflow
-                                if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > hisPredId) {
-                                    hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-                                }
-                            } else { //no new node overflow
-                                if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > hisPredId) {
-                                    hisValues.put(valueEntry.getKey(), valueEntry.getValue());
-                                }
+                        synchronized(AppConfig.chordState.successorLock) {
+                            ServentInfo hisPred = AppConfig.chordState.getPredecessor();
+                            if (hisPred == null) {
+                                hisPred = AppConfig.myServentInfo;
                             }
 
+                            AppConfig.chordState.setPredecessor(newNodeInfo);
+
+                            Map<Integer, MyFile> myValues = AppConfig.chordState.getValueMap();
+
+                            int myId = AppConfig.myServentInfo.getChordId();
+                            int hisPredId = hisPred.getChordId();
+                            int newNodeId = newNodeInfo.getChordId();
+
+                            for (Entry<Integer, MyFile> valueEntry : myValues.entrySet()) {
+                                if (hisPredId == myId) { //i am first and he is second
+                                    if (myId < newNodeId) {
+                                        if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > myId) {
+                                            hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+                                        }
+                                    } else {
+                                        if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > myId) {
+                                            hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+                                        }
+                                    }
+                                }
+                                if (hisPredId < myId) { //my old predecesor was before me
+                                    if (valueEntry.getKey() <= newNodeId) {
+                                        hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+                                    }
+                                } else { //my old predecesor was after me
+                                    if (hisPredId > newNodeId) { //new node overflow
+                                        if (valueEntry.getKey() <= newNodeId || valueEntry.getKey() > hisPredId) {
+                                            hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+                                        }
+                                    } else { //no new node overflow
+                                        if (valueEntry.getKey() <= newNodeId && valueEntry.getKey() > hisPredId) {
+                                            hisValues.put(valueEntry.getKey(), valueEntry.getValue());
+                                        }
+                                    }
+                                }
+                            }
+                            for (Integer key : hisValues.keySet()) { //remove his values from my map
+                                myValues.remove(key);
+                            }
+                            AppConfig.chordState.setValueMap(myValues);
                         }
 
-                    }
-                    for (Integer key : hisValues.keySet()) { //remove his values from my map
-                        myValues.remove(key);
-                    }
-                    AppConfig.chordState.setValueMap(myValues);
-
-                    AppConfig.chordState.chordsInSystem.set(AppConfig.chordState.getAllNodeInfo().size());
-
-                    System.out.println("SENDING WELCOME TO " + newNodePort);
-                    WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
-                    MessageUtil.sendMessage(wm);
-                    // Wait for all the update messages to finish
-                    synchronized (AppConfig.chordState.updatesSync){
-                        try {
-                            System.out.println("WAITING FOR UPDATES");
-                            AppConfig.chordState.updatesSync.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    // All updates finished, safe to give token to someone else
-                    System.out.println("GOT ALL UPDATES");
-                    // Mark in the token that my critical section is over
-                    synchronized (AppConfig.chordState.tokenRequestsLock) {
-                        AppConfig.chordState.token.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
-                        // Append requests in order
-                        for (Entry<Integer, Integer> tokenRequest : AppConfig.chordState.tokenRequests.entrySet()) {
-                            if (tokenRequest.getValue() == AppConfig.chordState.token.tokenRequests.get(tokenRequest.getKey()) + 1
-                                    && !AppConfig.chordState.token.queue.contains(tokenRequest.getKey())) {
-                                AppConfig.chordState.token.queue.add(tokenRequest.getKey());
+                        System.out.println("SENDING WELCOME TO " + newNodePort);
+                        WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
+                        MessageUtil.sendMessage(wm);
+                        // Wait for all the update messages to finish
+                        synchronized (AppConfig.chordState.updatesSync){
+                            try {
+                                System.out.println("WAITING FOR UPDATES");
+                                AppConfig.chordState.updatesSync.wait();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
                             }
                         }
+                        // All updates finished, safe to give token to someone else
+                        System.out.println("GOT ALL UPDATES");
+                        // Mark in the token that my critical section is over
+                        synchronized (AppConfig.chordState.tokenRequestsLock) {
+                            AppConfig.chordState.token.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
+                            // Append requests in order
+                            for (Entry<Integer, Integer> tokenRequest : AppConfig.chordState.tokenRequests.entrySet()) {
+                                if (tokenRequest.getValue() == AppConfig.chordState.token.tokenRequests.get(tokenRequest.getKey()) + 1
+                                        && !AppConfig.chordState.token.queue.contains(tokenRequest.getKey())) {
+                                    AppConfig.chordState.token.queue.add(tokenRequest.getKey());
+                                }
+                            }
 
 
-                        // Give token to the first chord in queue
-                        if (!AppConfig.chordState.token.queue.isEmpty()) {
-                            int sendTokenTo = AppConfig.chordState.token.queue.remove();
-                            System.out.println("GIVING TOKEN TO " + AppConfig.getInfoById(sendTokenTo).getListenerPort());
-                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(sendTokenTo).getListenerPort(), new Token(AppConfig.chordState.token));
-                            MessageUtil.sendMessage(tokenMessage);
-                            // I sent the token and don't have it anymore
-                            AppConfig.chordState.token = null;
+                            // Give token to the first chord in queue
+                            if (!AppConfig.chordState.token.queue.isEmpty()) {
+                                int sendTokenTo = AppConfig.chordState.token.queue.remove();
+                                System.out.println("GIVING TOKEN TO " + AppConfig.getInfoById(sendTokenTo).getListenerPort());
+                                TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(sendTokenTo).getListenerPort(), new Token(AppConfig.chordState.token));
+                                MessageUtil.sendMessage(tokenMessage);
+                                // I sent the token and don't have it anymore
+                                AppConfig.chordState.token = null;
+                            }
                         }
-                    }
-
                 } else { //if he is not my predecessor, let someone else take care of it
                     ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(newNodeInfo.getChordId());
                     System.out.println("NOT MY NODE, SENDING TO " + nextNode.getListenerPort());

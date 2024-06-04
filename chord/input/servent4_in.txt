@@ -1,3 +1,6 @@
-pause 50000000
-pause 40000
+pause 10000
+add_file 46.txt public
+pause 20000
+get_file 25.txt
 pause 6000
+pause 5000000

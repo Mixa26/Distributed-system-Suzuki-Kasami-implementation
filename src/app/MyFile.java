@@ -13,6 +13,13 @@ public class MyFile implements Serializable {
         this.access = access;
     }
 
+    public MyFile(MyFile myFile){
+        if (myFile != null) {
+            this.file = myFile.file;
+            this.access = myFile.access;
+        }
+    }
+
     public File getFile() {
         return file;
     }

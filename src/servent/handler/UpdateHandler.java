@@ -27,7 +27,9 @@ public class UpdateHandler implements MessageHandler {
 				List<ServentInfo> newNodes = new ArrayList<>();
 				newNodes.add(newNodInfo);
 
-				AppConfig.chordState.addNodes(newNodes);
+				synchronized(AppConfig.chordState.successorLock) {
+					AppConfig.chordState.addNodes(newNodes);
+				}
 				String newMessageText = "";
 				if (clientMessage.getMessageText().equals("")) {
 					newMessageText = String.valueOf(AppConfig.myServentInfo.getListenerPort());
@@ -45,8 +47,11 @@ public class UpdateHandler implements MessageHandler {
 				for (String port : ports) {
 					allNodes.add(new ServentInfo( AppConfig.myServentInfo.getIpAddress(), Integer.parseInt(port), AppConfig.getIdByPort(Integer.parseInt(port))));
 				}
-				AppConfig.chordState.addNodes(allNodes);
-				AppConfig.chordState.updatesCollected.incrementAndGet();
+				synchronized(AppConfig.chordState.successorLock) {
+					AppConfig.chordState.addNodes(allNodes);
+					AppConfig.chordState.added.compareAndSet(false, true);
+					AppConfig.chordState.successorLock.notify();
+				}
 
 				System.out.println("I SHOULD NOTIFY?");
 				AllUpdatesDoneMessage allUpdatesDoneMessage = new AllUpdatesDoneMessage(AppConfig.myServentInfo.getListenerPort(), Integer.parseInt(ports[0]));

@@ -1,2 +1,3 @@
-pause 50000000
+pause 20000
 pause 10000
+pause 5000000

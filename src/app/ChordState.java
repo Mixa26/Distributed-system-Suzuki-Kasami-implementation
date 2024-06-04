@@ -5,11 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,23 +42,25 @@ import servent.message.util.MessageUtil;
 public class ChordState {
 
 	public static int CHORD_SIZE;
+
 	public static int chordHash(int value) {
 		return 61 * value % CHORD_SIZE;
 	}
-	
+
 	private int chordLevel; //log_2(CHORD_SIZE)
-	
+
 	private ServentInfo[] successorTable;
 	private ServentInfo predecessorInfo;
-	
+
 	//we DO NOT use this to send messages, but only to construct the successor table
 	private List<ServentInfo> allNodeInfo;
-	
+
 	private Map<Integer, MyFile> valueMap;
 
 	public final Object chordSync = new Object();
 
-	public AtomicBoolean chordLock;
+
+	public final Object successorLock = new Object();
 
 	public final Object tokenRequestsLock = new Object();
 
@@ -70,14 +68,16 @@ public class ChordState {
 
 	public Token token;
 
-	public AtomicInteger chordsInSystem;
-
-	public AtomicInteger updatesCollected;
-
 	public List<Integer> friendChords;
 
+	public List<MyFile> myFilesInSystem;
+
 	public final Object updatesSync = new Object();
-	
+
+	public AtomicBoolean added;
+
+	public Object addedSync = new Object();
+
 	public ChordState() {
 		this.chordLevel = 1;
 		int tmp = CHORD_SIZE;
@@ -88,26 +88,25 @@ public class ChordState {
 			tmp /= 2;
 			this.chordLevel++;
 		}
-		
+
 		successorTable = new ServentInfo[chordLevel];
 		for (int i = 0; i < chordLevel; i++) {
 			successorTable[i] = null;
 		}
-		
+
 		predecessorInfo = null;
 		valueMap = new HashMap<>();
 		allNodeInfo = new CopyOnWriteArrayList<>();
-		chordLock = new AtomicBoolean(false);
 		tokenRequests = new HashMap<>();
 		for (int i = 0; i < AppConfig.SERVENT_COUNT; i++){
 			tokenRequests.put(i, 0);
 		}
 		token = null;
-		chordsInSystem = new AtomicInteger(0);
-		updatesCollected = new AtomicInteger(0);
 		friendChords = new CopyOnWriteArrayList<>();
+		myFilesInSystem = new ArrayList<>();
+		added = new AtomicBoolean(false);
 	}
-	
+
 	/**
 	 * This should be called once after we get <code>WELCOME</code> message.
 	 * It sets up our initial value map and our first successor so we can send <code>UPDATE</code>.
@@ -117,14 +116,14 @@ public class ChordState {
 		//set a temporary pointer to next node, for sending of update message
 		successorTable[0] = new ServentInfo("localhost", welcomeMsg.getSenderPort(), AppConfig.getIdByPort(welcomeMsg.getSenderPort()));
 		this.valueMap = welcomeMsg.getValues();
-		
+
 		//tell bootstrap this node is not a collider
 		try {
 			Socket bsSocket = new Socket("localhost", AppConfig.BOOTSTRAP_PORT);
-			
+
 			PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
 			bsWriter.write("New\n" + AppConfig.myServentInfo.getListenerPort() + "\n");
-			
+
 			bsWriter.flush();
 			bsSocket.close();
 		} catch (UnknownHostException e) {
@@ -133,23 +132,23 @@ public class ChordState {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getChordLevel() {
 		return chordLevel;
 	}
-	
+
 	public ServentInfo[] getSuccessorTable() {
 		return successorTable;
 	}
-	
+
 	public int getNextNodePort() {
-		return successorTable[0].getListenerPort();
+		return Integer.valueOf(successorTable[0].getListenerPort());
 	}
-	
+
 	public ServentInfo getPredecessor() {
 		return predecessorInfo;
 	}
-	
+
 	public void setPredecessor(ServentInfo newNodeInfo) {
 		this.predecessorInfo = newNodeInfo;
 	}
@@ -165,7 +164,7 @@ public class ChordState {
 	public void setValueMap(Map<Integer, MyFile> valueMap) {
 		this.valueMap = valueMap;
 	}
-	
+
 	public boolean isCollision(int chordId) {
 		if (chordId == AppConfig.myServentInfo.getChordId()) {
 			return true;
@@ -177,7 +176,7 @@ public class ChordState {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns true if we are the owner of the specified key.
 	 */
@@ -185,10 +184,10 @@ public class ChordState {
 		if (predecessorInfo == null) {
 			return true;
 		}
-		
+
 		int predecessorChordId = predecessorInfo.getChordId();
 		int myChordId = AppConfig.myServentInfo.getChordId();
-		
+
 		if (predecessorChordId < myChordId) { //no overflow
 			if (key <= myChordId && key > predecessorChordId) {
 				return true;
@@ -198,10 +197,10 @@ public class ChordState {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Main chord operation - find the nearest node to hop to to find a specific key.
 	 * We have to take a value that is smaller than required to make sure we don't overshoot.
@@ -211,10 +210,10 @@ public class ChordState {
 		if (isKeyMine(key)) {
 			return AppConfig.myServentInfo;
 		}
-		
+
 		//normally we start the search from our first successor
 		int startInd = 0;
-		
+
 		//if the key is smaller than us, and we are not the owner,
 		//then all nodes up to CHORD_SIZE will never be the owner,
 		//so we start the search from the first item in our table after CHORD_SIZE
@@ -226,17 +225,17 @@ public class ChordState {
 				skip++;
 			}
 		}
-		
+
 		int previousId = successorTable[startInd].getChordId();
-		
+
 		for (int i = startInd + 1; i < successorTable.length; i++) {
 			if (successorTable[i] == null) {
 				AppConfig.timestampedErrorPrint("Couldn't find successor for " + key);
 				break;
 			}
-			
+
 			int successorId = successorTable[i].getChordId();
-			
+
 			if (successorId >= key) {
 				return successorTable[i-1];
 			}
@@ -252,23 +251,23 @@ public class ChordState {
 
 	private void updateSuccessorTable() {
 		//first node after me has to be successorTable[0]
-		
+
 		int currentNodeIndex = 0;
 		ServentInfo currentNode = allNodeInfo.get(currentNodeIndex);
 		successorTable[0] = currentNode;
-		
+
 		int currentIncrement = 2;
-		
+
 		ServentInfo previousNode = AppConfig.myServentInfo;
-		
+
 		//i is successorTable index
 		for(int i = 1; i < chordLevel; i++, currentIncrement *= 2) {
 			//we are looking for the node that has larger chordId than this
 			int currentValue = (AppConfig.myServentInfo.getChordId() + currentIncrement) % CHORD_SIZE;
-			
+
 			int currentId = currentNode.getChordId();
 			int previousId = previousNode.getChordId();
-			
+
 			//this loop needs to skip all nodes that have smaller chordId than currentValue
 			while (true) {
 				if (currentValue > currentId) {
@@ -300,29 +299,29 @@ public class ChordState {
 				}
 			}
 		}
-		
+
 	}
 
 	/**
 	 * This method constructs an ordered list of all nodes. They are ordered by chordId, starting from this node.
 	 * Once the list is created, we invoke <code>updateSuccessorTable()</code> to do the rest of the work.
-	 * 
+	 *
 	 */
 	public void addNodes(List<ServentInfo> newNodes) {
 		allNodeInfo.addAll(newNodes);
-		
+
 		allNodeInfo.sort(new Comparator<ServentInfo>() {
-			
+
 			@Override
 			public int compare(ServentInfo o1, ServentInfo o2) {
 				return o1.getChordId() - o2.getChordId();
 			}
-			
+
 		});
-		
+
 		List<ServentInfo> newList = new ArrayList<>();
 		List<ServentInfo> newList2 = new ArrayList<>();
-		
+
 		int myId = AppConfig.myServentInfo.getChordId();
 		for (ServentInfo serventInfo : allNodeInfo) {
 			if (serventInfo.getChordId() < myId) {
@@ -331,7 +330,7 @@ public class ChordState {
 				newList.add(serventInfo);
 			}
 		}
-		
+
 		allNodeInfo.clear();
 		allNodeInfo.addAll(newList);
 		allNodeInfo.addAll(newList2);
@@ -340,7 +339,7 @@ public class ChordState {
 		} else {
 			predecessorInfo = newList.get(newList.size()-1);
 		}
-		
+
 		updateSuccessorTable();
 	}
 
@@ -348,6 +347,15 @@ public class ChordState {
 	 * The Chord put operation. Stores locally if key is ours, otherwise sends it on.
 	 */
 	public void putValue(int key, MyFile value) {
+		if (!AppConfig.chordState.added.get()) {
+			try {
+				System.out.println("WAITING TO BE ADDED...");
+				AppConfig.chordState.successorLock.wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		System.out.println("PROCEEDING TO ADD THE FILE");
 		if (isKeyMine(key)) {
 			valueMap.put(key, value);
 		} else {
@@ -356,7 +364,7 @@ public class ChordState {
 			MessageUtil.sendMessage(pm);
 		}
 	}
-	
+
 	/**
 	 * The chord get operation. Gets the value locally if key is ours, otherwise asks someone else to give us the value.
 	 * @return <ul>
@@ -366,19 +374,31 @@ public class ChordState {
 	 *		   </ul>
 	 */
 	public MyFile getValue(int key) {
+		if (!AppConfig.chordState.added.get()) {
+			try {
+				System.out.println("WAITING TO BE ADDED...");
+				AppConfig.chordState.successorLock.wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		System.out.println("PROCEEDING TO GET THE FILE");
+		System.out.println("MY PREDECESSOR " + predecessorInfo.getChordId() + " MY CHORD ID " + AppConfig.myServentInfo.getChordId());
 		if (isKeyMine(key)) {
 			if (valueMap.containsKey(key)) {
+				System.out.println("FIRST?");
 				return valueMap.get(key);
 			} else {
+				System.out.println("SECOND?");
 				return new MyFile(null, FileType.PUBLIC);
 			}
 		}
-		
+
 		ServentInfo nextNode = getNextNodeForKey(key);
+		System.out.println("ASKING " + nextNode.getListenerPort() + " FOR FILE");
 		AskGetMessage agm = new AskGetMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), String.valueOf(key));
 		MessageUtil.sendMessage(agm);
-		
+
 		return null;
 	}
-
 }

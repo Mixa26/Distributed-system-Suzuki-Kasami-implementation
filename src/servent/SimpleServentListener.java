@@ -88,6 +88,9 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				case ALL_UPDATES_DONE:
 					messageHandler = new AllUpdatesDoneHandler(clientMessage);
 					break;
+				case LIST_FILES:
+					messageHandler = new ListFilesHandler(clientMessage);
+					break;
 				case POISON:
 					break;
 				}

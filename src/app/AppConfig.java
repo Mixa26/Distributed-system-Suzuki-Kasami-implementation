@@ -54,6 +54,8 @@ public class AppConfig {
 	public static int SERVENT_COUNT;
 	
 	public static ChordState chordState;
+
+	public static String ROOT_PATH = "";
 	
 	/**
 	 * Reads a config file. Should be called once at start of app.
@@ -98,10 +100,9 @@ public class AppConfig {
 		}
 
 		Path folderPath = Paths.get(properties.getProperty("root"));
-		String rootPath = "";
 
 		if (Files.exists(folderPath) && Files.isDirectory(folderPath)) {
-			rootPath = properties.getProperty("root");
+			ROOT_PATH = properties.getProperty("root");
 		} else {
 			timestampedErrorPrint("The root folder on the specified path does not exist. Exiting...");
 			System.exit(0);

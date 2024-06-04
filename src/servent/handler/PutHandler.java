@@ -18,7 +18,9 @@ public class PutHandler implements MessageHandler {
 	public void run() {
 
 		if (clientMessage.getMessageType() == MessageType.PUT) {
-			AppConfig.chordState.putValue(((PutMessage)clientMessage).getKey(), ((PutMessage)clientMessage).getValue());
+			synchronized(AppConfig.chordState.successorLock) {
+				AppConfig.chordState.putValue(((PutMessage) clientMessage).getKey(), ((PutMessage) clientMessage).getValue());
+			}
 		} else {
 			AppConfig.timestampedErrorPrint("Put handler got a message that is not PUT");
 		}
