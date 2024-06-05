@@ -54,6 +54,8 @@ public class ChordState implements Runnable{
 
 	public AtomicBoolean predecessorHealth;
 
+	public AtomicBoolean predecessorConfirmedDead;
+
 	public AtomicInteger healthPort;
 
 	private Long lastPredecessorHealthCheck;
@@ -121,6 +123,7 @@ public class ChordState implements Runnable{
 		backup = new ConcurrentHashMap<>();
 		backupSequence = new AtomicInteger(0);
 		predecessorHealth = new AtomicBoolean(true);
+		predecessorConfirmedDead = new AtomicBoolean(false);
 		healthPort = new AtomicInteger(-1);
 	}
 
@@ -481,6 +484,7 @@ public class ChordState implements Runnable{
 	// Ping predecessor for health check
 	@Override
 	public void run() {
+		boolean alreadySent = false;
 		while (true) {
 			int port = AppConfig.chordState.healthPort.get();
 			// Don't check the health for myself!
@@ -490,12 +494,15 @@ public class ChordState implements Runnable{
 					MessageUtil.sendMessage(new PingMessage(AppConfig.myServentInfo.getListenerPort(), port));
 					lastPredecessorHealthCheck = System.currentTimeMillis();
 				} else {
-					if (System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.strongLimit) {
+					if (System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.strongLimit && AppConfig.chordState.predecessorConfirmedDead.get()) {
 						// Restructure the system and inform others!
 						System.out.println("DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH " + port);
 						AppConfig.timestampedStandardPrint("Hazard! Predecessor " + port + " died!");
-					} else if (System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.weakLimit) {
+					} else if (!alreadySent && System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.weakLimit) {
 						AppConfig.timestampedStandardPrint("Warning! Predecessor " + port + " passed weak limit for health check!");
+						alreadySent = true;
+						AppConfig.chordState.predecessorConfirmedDead.set(true);
+						MessageUtil.sendMessage(new IsReallyDeadMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.backup.get(port).getPredecessorInfo().getListenerPort(), port, false, false));
 					}
 				}
 			}

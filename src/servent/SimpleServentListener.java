@@ -110,6 +110,9 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				case PONG:
 					messageHandler = new PongHandler(clientMessage);
 					break;
+				case IS_REALLY_DEAD:
+					messageHandler = new IsReallyDeadHandler(clientMessage);
+					break;
 				case POISON:
 					break;
 				}
