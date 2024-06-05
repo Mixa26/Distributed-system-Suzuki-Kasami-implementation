@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.AppConfig;
+import app.ChordState;
 import app.ServentInfo;
 import servent.message.*;
 import servent.message.util.MessageUtil;
@@ -56,6 +57,8 @@ public class UpdateHandler implements MessageHandler {
 					System.out.println("SEND ME YOUR BACKUP PORT " + AppConfig.chordState.getPredecessor().getListenerPort());
 					SendMeYouBackupMessage bm = new SendMeYouBackupMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getPredecessor().getListenerPort());
 					MessageUtil.sendMessage(bm);
+
+					AppConfig.chordState.healthPort.set(AppConfig.chordState.getPredecessor().getListenerPort());
 
 					AppConfig.chordState.added.compareAndSet(false, true);
 					AppConfig.chordState.successorLock.notify();

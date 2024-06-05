@@ -116,6 +116,7 @@ public class NewNodeHandler implements MessageHandler {
                             }
 
                             AppConfig.chordState.setPredecessor(newNodeInfo);
+                            AppConfig.chordState.healthPort.set(newNodeInfo.getListenerPort());
 
                             Map<Integer, MyFile> myValues = AppConfig.chordState.getValueMap();
 

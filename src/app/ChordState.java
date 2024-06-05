@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.Time;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -37,7 +38,7 @@ import servent.message.util.MessageUtil;
  * @author bmilojkovic
  *
  */
-public class ChordState {
+public class ChordState implements Runnable{
 
 	public static int CHORD_SIZE;
 
@@ -50,6 +51,14 @@ public class ChordState {
 	private ServentInfo[] successorTable;
 
 	private ServentInfo predecessorInfo;
+
+	public AtomicBoolean predecessorHealth;
+
+	public AtomicInteger healthPort;
+
+	private Long lastPredecessorHealthCheck;
+
+	private final int pingEverySeconds = 5;
 
 	//we DO NOT use this to send messages, but only to construct the successor table
 	private List<ServentInfo> allNodeInfo;
@@ -111,6 +120,8 @@ public class ChordState {
 		added = new AtomicBoolean(false);
 		backup = new ConcurrentHashMap<>();
 		backupSequence = new AtomicInteger(0);
+		predecessorHealth = new AtomicBoolean(true);
+		healthPort = new AtomicInteger(-1);
 	}
 
 	/**
@@ -465,5 +476,35 @@ public class ChordState {
 		MessageUtil.sendMessage(agm);
 
 		return null;
+	}
+
+	// Ping predecessor for health check
+	@Override
+	public void run() {
+		while (true) {
+			int port = AppConfig.chordState.healthPort.get();
+			// Don't check the health for myself!
+			if (port != -1 && port != AppConfig.myServentInfo.getListenerPort()) {
+				if (AppConfig.chordState.predecessorHealth.get()) {
+					AppConfig.chordState.predecessorHealth.set(false);
+					MessageUtil.sendMessage(new PingMessage(AppConfig.myServentInfo.getListenerPort(), port));
+					lastPredecessorHealthCheck = System.currentTimeMillis();
+				} else {
+					if (System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.strongLimit) {
+						// Restructure the system and inform others!
+						System.out.println("DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH " + port);
+						AppConfig.timestampedStandardPrint("Hazard! Predecessor " + port + " died!");
+					} else if (System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.weakLimit) {
+						AppConfig.timestampedStandardPrint("Warning! Predecessor " + port + " passed weak limit for health check!");
+					}
+				}
+			}
+
+			try {
+				Thread.sleep(pingEverySeconds * 1000);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 }

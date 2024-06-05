@@ -54,6 +54,8 @@ public class ServentInitializer implements Runnable {
 			NewNodeMessage nnm = new NewNodeMessage(AppConfig.myServentInfo.getListenerPort(), someServentPort);
 			MessageUtil.sendMessage(nnm);
 		}
+		ChordState chordState = new ChordState();
+		Thread predecessorHealthCheckThread = new Thread(chordState);
+		predecessorHealthCheckThread.start();
 	}
-
 }

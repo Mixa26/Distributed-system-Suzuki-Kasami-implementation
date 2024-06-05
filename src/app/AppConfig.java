@@ -56,6 +56,10 @@ public class AppConfig {
 	public static ChordState chordState;
 
 	public static String ROOT_PATH = "";
+
+	public static Integer weakLimit = 0;
+
+	public static Integer strongLimit = 0;
 	
 	/**
 	 * Reads a config file. Should be called once at start of app.
@@ -110,8 +114,6 @@ public class AppConfig {
 
 		String ip = properties.getProperty("ip");
 
-		int weakLimit = 0;
-		int strongLimit = 0;
 
 		try {
 			weakLimit = Integer.parseInt(properties.getProperty("weak_limit"));
