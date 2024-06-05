@@ -1,2 +1,0 @@
-17:04:59 - Couldn't send message: [4|1300|6||TOKEN_REQUEST|1400|24]
-17:04:59 - Couldn't send message: [4|1300|7||TOKEN_REQUEST|1600|0]

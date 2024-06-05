@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 
 import app.AppConfig;
 import app.Cancellable;
+import cli.command.RemoveFileCommand;
 import servent.handler.*;
 import servent.message.Message;
 import servent.message.util.MessageUtil;
@@ -93,6 +94,9 @@ public class SimpleServentListener implements Runnable, Cancellable {
 					break;
 				case ADD_FRIEND:
 					messageHandler = new AddFriendHandler(clientMessage);
+					break;
+				case REMOVE_FILE:
+					messageHandler = new RemoveFileHandler(clientMessage);
 					break;
 				case POISON:
 					break;

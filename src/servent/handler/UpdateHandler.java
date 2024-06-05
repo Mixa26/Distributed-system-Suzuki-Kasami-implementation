@@ -29,16 +29,17 @@ public class UpdateHandler implements MessageHandler {
 
 				synchronized(AppConfig.chordState.successorLock) {
 					AppConfig.chordState.addNodes(newNodes);
+
+					String newMessageText = "";
+					if (clientMessage.getMessageText().equals("")) {
+						newMessageText = String.valueOf(AppConfig.myServentInfo.getListenerPort());
+					} else {
+						newMessageText = clientMessage.getMessageText() + "," + AppConfig.myServentInfo.getListenerPort();
+					}
+					Message nextUpdate = new UpdateMessage(clientMessage.getSenderPort(), Integer.valueOf(AppConfig.chordState.getNextNodePort()),
+							newMessageText);
+					MessageUtil.sendMessage(nextUpdate);
 				}
-				String newMessageText = "";
-				if (clientMessage.getMessageText().equals("")) {
-					newMessageText = String.valueOf(AppConfig.myServentInfo.getListenerPort());
-				} else {
-					newMessageText = clientMessage.getMessageText() + "," + AppConfig.myServentInfo.getListenerPort();
-				}
-				Message nextUpdate = new UpdateMessage(clientMessage.getSenderPort(), AppConfig.chordState.getNextNodePort(),
-						newMessageText);
-				MessageUtil.sendMessage(nextUpdate);
 			} else {
 				String messageText = clientMessage.getMessageText();
 				String[] ports = messageText.split(",");

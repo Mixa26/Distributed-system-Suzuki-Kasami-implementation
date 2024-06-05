@@ -3,4 +3,5 @@ add_file 46.txt private
 pause 20000
 get_file 25.txt
 pause 6000
+remove_file 46.txt
 pause 5000000

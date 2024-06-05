@@ -2,4 +2,6 @@ pause 40000
 pause 5000
 get_file 25.txt
 pause 5000
+pause 40000
+get_file 46.txt
 pause 5000000

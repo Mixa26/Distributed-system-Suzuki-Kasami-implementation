@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import servent.message.AskGetMessage;
 import servent.message.PutMessage;
+import servent.message.RemoveFileMessage;
 import servent.message.WelcomeMessage;
 import servent.message.util.MessageUtil;
 
@@ -299,7 +300,11 @@ public class ChordState {
 				}
 			}
 		}
-
+//		System.out.print("Successor: ");
+//		for (int i = 0; i < 6; i++){
+//			System.out.print(successorTable[i] + " | ");
+//		}
+//		System.out.println();
 	}
 
 	/**
@@ -364,6 +369,27 @@ public class ChordState {
 			ServentInfo nextNode = getNextNodeForKey(key);
 			PutMessage pm = new PutMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), key, value);
 			MessageUtil.sendMessage(pm);
+		}
+	}
+
+	public void removeValue(int key) {
+		if (!AppConfig.chordState.added.get()) {
+			try {
+				System.out.println("WAITING TO BE REMOVED...");
+				AppConfig.chordState.successorLock.wait();
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		System.out.println("PROCEEDING TO REMOVE THE FILE");
+		if (isKeyMine(key)) {
+			System.out.println("IM REMOVING THE FILE !");
+			valueMap.remove(key);
+		} else {
+			ServentInfo nextNode = getNextNodeForKey(key);
+			System.out.println("IM NOT REMOVING THE FILE, PASSING TO " + nextNode.getListenerPort());
+			RemoveFileMessage rm = new RemoveFileMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), key);
+			MessageUtil.sendMessage(rm);
 		}
 	}
 

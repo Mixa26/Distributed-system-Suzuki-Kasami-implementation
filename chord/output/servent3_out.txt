@@ -1,29 +1,31 @@
-17:05:01 - Starting servent [24|localhost|1400]
-17:05:01 - Pausing for 20000 ms
+08:57:05 - Starting servent [24|localhost|1400]
+08:57:05 - Pausing for 20000 ms
+08:57:07 - Got message [48|1200|7||TOKEN_REQUEST|1400|24]
+My RN {0=0, 1=1, 2=0, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+08:57:11 - Got message [4|1300|5||TOKEN_REQUEST|1400|24]
+My RN {0=0, 1=1, 2=1, 3=0, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
 CHORD 1300 IS ADDING ME
-17:05:02 - Sending message [24|1400|0||NEW_NODE|1300|4]
-17:05:06 - Got message [28|1100|8||TOKEN_REQUEST|1400|24]
-My RN {0=3, 1=0, 2=0, 3=0, 4=0}
+08:57:13 - Sending message [24|1400|0||NEW_NODE|1300|4]
+08:57:20 - Got message [28|1100|10||TOKEN_REQUEST|1400|24]
+My RN {0=3, 1=1, 2=1, 3=0, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-17:05:09 - Got message [28|1100|10||WELCOME|1400|24]
-17:05:11 - Sending message [24|1400|1|1100|UPDATE|1100|28]
-17:05:11 - Got message [4|1300|14||TOKEN_REQUEST|1400|24]
-My RN {0=3, 1=0, 2=3, 3=0, 4=0}
-IN TOKEN REQUEST
-I dont have the token!
-17:05:14 - Got message [24|1400|16|1100,1100,1200,1300|UPDATE|1400|24]
+08:57:21 - Got message [28|1100|12||WELCOME|1400|24]
+08:57:22 - Sending message [24|1400|1|1100|UPDATE|1100|28]
+08:57:25 - Pausing for 10000 ms
+08:57:26 - Got message [24|1400|11|1100,1100,1200,1600,1300|UPDATE|1400|24]
 I SHOULD NOTIFY?
-17:05:14 - Sending message [24|1400|2||ALL_UPDATES_DONE|1100|28]
-17:05:18 - Got message [0|1600|18|1300,1300|UPDATE|1400|24]
-17:05:20 - Sending message [0|1600|3|1300,1300,1400|UPDATE|1100|28]
-17:05:21 - Pausing for 10000 ms
-17:05:23 - Got message [0|1600|4||PUT|1400|24]
-PROCEEDING TO ADD THE FILE
-AFTER ADDING MY FILE SYSTEM [app.MyFile@7a5890da]
-17:05:24 - Sending message [24|1400|4||PUT|1100|28]
-17:05:31 - Pausing for 5000000 ms
-17:05:38 - Got message [48|1200|6|25|ASK_GET|1400|24]
-17:05:39 - Sending message [48|1200|5|25|ASK_GET|1100|28]
-17:05:43 - Got message [0|1600|7|25|ASK_GET|1400|24]
-17:05:44 - Sending message [0|1600|6|25|ASK_GET|1100|28]
+08:57:27 - Sending message [24|1400|2||ALL_UPDATES_DONE|1100|28]
+08:57:35 - Pausing for 5000000 ms
+08:57:38 - Got message [0|1600|7|25|ASK_GET|1400|24]
+08:57:39 - Sending message [0|1600|3|25|ASK_GET|1100|28]
+08:57:42 - Got message [48|1200|8|25|ASK_GET|1400|24]
+08:57:42 - Sending message [48|1200|4|25|ASK_GET|1100|28]
+08:57:44 - Got message [0|1600|9||REMOVE_FILE|1400|24]
+PROCEEDING TO REMOVE THE FILE
+IM NOT REMOVING THE FILE, PASSING TO 1100
+08:57:45 - Sending message [24|1400|5||REMOVE_FILE|1100|28]
