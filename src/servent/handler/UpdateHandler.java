@@ -5,10 +5,7 @@ import java.util.List;
 
 import app.AppConfig;
 import app.ServentInfo;
-import servent.message.AllUpdatesDoneMessage;
-import servent.message.Message;
-import servent.message.MessageType;
-import servent.message.UpdateMessage;
+import servent.message.*;
 import servent.message.util.MessageUtil;
 
 public class UpdateHandler implements MessageHandler {
@@ -50,6 +47,16 @@ public class UpdateHandler implements MessageHandler {
 				}
 				synchronized(AppConfig.chordState.successorLock) {
 					AppConfig.chordState.addNodes(allNodes);
+
+					// Ask for successor backup
+					System.out.println("SEND ME YOUR BACKUP PORT " + AppConfig.chordState.getPredecessor().getListenerPort());
+					SendMeYouBackupMessage b = new SendMeYouBackupMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodePort());
+					MessageUtil.sendMessage(b);
+					// Ask for predecessor backup
+					System.out.println("SEND ME YOUR BACKUP PORT " + AppConfig.chordState.getPredecessor().getListenerPort());
+					SendMeYouBackupMessage bm = new SendMeYouBackupMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getPredecessor().getListenerPort());
+					MessageUtil.sendMessage(bm);
+
 					AppConfig.chordState.added.compareAndSet(false, true);
 					AppConfig.chordState.successorLock.notify();
 				}

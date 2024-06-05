@@ -11,10 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import servent.message.AskGetMessage;
-import servent.message.PutMessage;
-import servent.message.RemoveFileMessage;
-import servent.message.WelcomeMessage;
+import servent.message.*;
 import servent.message.util.MessageUtil;
 
 /**
@@ -51,12 +48,18 @@ public class ChordState {
 	private int chordLevel; //log_2(CHORD_SIZE)
 
 	private ServentInfo[] successorTable;
+
 	private ServentInfo predecessorInfo;
 
 	//we DO NOT use this to send messages, but only to construct the successor table
 	private List<ServentInfo> allNodeInfo;
 
 	private Map<Integer, MyFile> valueMap;
+
+	// key-port, value-backup data
+	public Map<Integer, BackupData> backup;
+
+	public AtomicInteger backupSequence;
 
 	public final Object chordSync = new Object();
 
@@ -96,7 +99,7 @@ public class ChordState {
 		}
 
 		predecessorInfo = null;
-		valueMap = new HashMap<>();
+		valueMap = new ConcurrentHashMap<>();
 		allNodeInfo = new CopyOnWriteArrayList<>();
 		tokenRequests = new HashMap<>();
 		for (int i = 0; i < AppConfig.SERVENT_COUNT; i++){
@@ -106,6 +109,8 @@ public class ChordState {
 		friendChords = new CopyOnWriteArrayList<>();
 		myFilesInSystem = new CopyOnWriteArrayList<>();
 		added = new AtomicBoolean(false);
+		backup = new ConcurrentHashMap<>();
+		backupSequence = new AtomicInteger(0);
 	}
 
 	/**
@@ -160,6 +165,14 @@ public class ChordState {
 
 	public List<ServentInfo> getAllNodeInfo() {
 		return allNodeInfo;
+	}
+
+	public Map<Integer, MyFile> getValueMapCopy() {
+		Map<Integer, MyFile> valueMapCopy = new HashMap<>();
+		for (Map.Entry<Integer, MyFile> file : valueMap.entrySet()){
+			valueMapCopy.put(file.getKey(), file.getValue());
+		}
+		return valueMapCopy;
 	}
 
 	public void setValueMap(Map<Integer, MyFile> valueMap) {
@@ -365,6 +378,7 @@ public class ChordState {
 		System.out.println("AFTER ADDING MY FILE SYSTEM " + myFilesInSystem);
 		if (isKeyMine(key)) {
 			valueMap.put(key, value);
+			doBackup();
 		} else {
 			ServentInfo nextNode = getNextNodeForKey(key);
 			PutMessage pm = new PutMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), key, value);
@@ -385,11 +399,34 @@ public class ChordState {
 		if (isKeyMine(key)) {
 			System.out.println("IM REMOVING THE FILE !");
 			valueMap.remove(key);
+			doBackup();
 		} else {
 			ServentInfo nextNode = getNextNodeForKey(key);
 			System.out.println("IM NOT REMOVING THE FILE, PASSING TO " + nextNode.getListenerPort());
 			RemoveFileMessage rm = new RemoveFileMessage(AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), key);
 			MessageUtil.sendMessage(rm);
+		}
+	}
+
+	private void doBackup() {
+		// Update backups on successor and predecessor
+		int newBackupSequence = backupSequence.incrementAndGet();
+		BackupData newBackup = new BackupData(
+				AppConfig.myServentInfo.getListenerPort(),
+				newBackupSequence,
+				getPredecessor(),
+				getValueMapCopy()
+		);
+		// Send backup to his successor
+		if (successorTable[0] != null) {
+			Message backupS = new BackupMessage(AppConfig.myServentInfo.getListenerPort(), getNextNodePort(), newBackup);
+			MessageUtil.sendMessage(backupS);
+		}
+		// Don't send backup to myself
+		if (getPredecessor() != null && getPredecessor().getListenerPort() != AppConfig.myServentInfo.getListenerPort()) {
+			// Send backup to his predecessor
+			Message backupP = new BackupMessage(AppConfig.myServentInfo.getListenerPort(), getPredecessor().getListenerPort(), newBackup);
+			MessageUtil.sendMessage(backupP);
 		}
 	}
 

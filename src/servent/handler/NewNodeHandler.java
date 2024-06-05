@@ -10,10 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
-import app.AppConfig;
-import app.MyFile;
-import app.ServentInfo;
-import app.Token;
+import app.*;
 import servent.message.*;
 import servent.message.util.MessageUtil;
 
@@ -110,9 +107,10 @@ public class NewNodeHandler implements MessageHandler {
                 boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
                     if (isMyPred) { //if yes, prepare and send welcome message
                         Map<Integer, MyFile> hisValues = new HashMap<>();
+                        ServentInfo hisPred = null;
 
                         synchronized(AppConfig.chordState.successorLock) {
-                            ServentInfo hisPred = AppConfig.chordState.getPredecessor();
+                            hisPred = AppConfig.chordState.getPredecessor();
                             if (hisPred == null) {
                                 hisPred = AppConfig.myServentInfo;
                             }
@@ -159,7 +157,19 @@ public class NewNodeHandler implements MessageHandler {
                             AppConfig.chordState.setValueMap(myValues);
                         }
 
+                        // Make a backup
+                        BackupData newNodeBackup = new BackupData(newNodePort, 0, hisPred, hisValues);
+                        // Save my predecessors backup (newNodes backup)
+                        AppConfig.chordState.backup.put(newNodePort, newNodeBackup);
+                        // Send backup to his predecessor
+                        System.out.println("SENDING BACKUP TO " + hisPred.getListenerPort());
+                        if (hisPred.getListenerPort() != AppConfig.myServentInfo.getListenerPort()) {
+                            Message backup = new BackupMessage(AppConfig.myServentInfo.getListenerPort(), hisPred.getListenerPort(), newNodeBackup);
+                            MessageUtil.sendMessage(backup);
+                        }
+
                         System.out.println("SENDING WELCOME TO " + newNodePort);
+                        // Send backups of successor and predecessor to new node
                         WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
                         MessageUtil.sendMessage(wm);
                         // Wait for all the update messages to finish

@@ -98,6 +98,12 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				case REMOVE_FILE:
 					messageHandler = new RemoveFileHandler(clientMessage);
 					break;
+				case BACKUP:
+					messageHandler = new BackupHandler(clientMessage);
+					break;
+				case SEND_BACKUP:
+					messageHandler = new SendBackupHandler(clientMessage);
+					break;
 				case POISON:
 					break;
 				}
