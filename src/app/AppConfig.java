@@ -25,7 +25,7 @@ public class AppConfig {
 	 */
 	public static ServentInfo myServentInfo;
 
-	private static List<ServentInfo> serventInfoList = new ArrayList<>();
+	public static List<ServentInfo> serventInfoList = new ArrayList<>();
 	
 	/**
 	 * Print a message to stdout with a timestamp
@@ -48,6 +48,8 @@ public class AppConfig {
 		
 		System.err.println(timeFormat.format(now) + " - " + message);
 	}
+
+
 	
 	public static boolean INITIALIZED = false;
 	public static int BOOTSTRAP_PORT;

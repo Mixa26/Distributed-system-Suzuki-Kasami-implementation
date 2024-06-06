@@ -113,6 +113,9 @@ public class SimpleServentListener implements Runnable, Cancellable {
 				case IS_REALLY_DEAD:
 					messageHandler = new IsReallyDeadHandler(clientMessage);
 					break;
+				case FAILURE_UPDATE:
+					messageHandler = new FailureUpdatesHandler(clientMessage);
+					break;
 				case POISON:
 					break;
 				}

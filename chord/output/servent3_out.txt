@@ -1,98 +1,143 @@
-17:48:44 - Starting servent [24|localhost|1400]
-17:48:45 - Pausing for 20000 ms
+07:18:32 - Starting servent [24|localhost|1400]
+07:18:32 - Pausing for 20000 ms
 CHORD 1100 IS ADDING ME
-17:48:45 - Sending message [24|1400|0||NEW_NODE|1100|28]
-17:48:46 - Got message [28|1100|11||TOKEN_REQUEST|1400|24]
-My RN {0=2, 1=0, 2=0, 3=0, 4=0}
-IN TOKEN REQUEST
-I dont have the token!
-17:48:49 - Got message [28|1100|16||WELCOME|1400|24]
-17:48:50 - Sending message [24|1400|1|1100|UPDATE|1100|28]
-17:48:51 - Got message [28|1100|17||PING|1400|24]
-17:48:52 - Sending message [24|1400|2||PONG|1100|28]
-17:48:53 - Got message [24|1400|20|1100,1100,1200,1300|UPDATE|1400|24]
-SEND ME YOUR BACKUP PORT 1300
+07:18:34 - Sending message [24|1400|0||NEW_NODE|1100|28]
+07:18:35 - Got message [28|1100|14||WELCOME|1400|24]
+07:18:35 - Got message [0|1600|0||NEW_NODE|1400|24]
+SENDING TOKEN REQUEST TO 1100 NUMBER 1 AND I AM ID 3
+SENDING TOKEN REQUEST TO 1200 NUMBER 1 AND I AM ID 3
+SENDING TOKEN REQUEST TO 1300 NUMBER 1 AND I AM ID 3
+SENDING TOKEN REQUEST TO 1600 NUMBER 1 AND I AM ID 3
+GETTING TOKEN
+WAITING FOR TOKEN
+07:18:36 - Sending message [24|1400|5||TOKEN_REQUEST|1600|0]
+07:18:36 - Sending message [24|1400|1|1100|UPDATE|1100|28]
+07:18:36 - Sending message [24|1400|2||TOKEN_REQUEST|1100|28]
+07:18:36 - Sending message [24|1400|3||TOKEN_REQUEST|1200|48]
+07:18:37 - Sending message [24|1400|4||TOKEN_REQUEST|1300|4]
+07:18:38 - Got message [28|1100|16||PING|1400|24]
+07:18:39 - Got message [24|1400|8|1100,1100,1200,1300|UPDATE|1400|24]
+SEND ME YOUR BACKUP PORT 1100
 SEND ME YOUR BACKUP PORT 1300
 I SHOULD NOTIFY?
-17:48:54 - Sending message [24|1400|5||ALL_UPDATES_DONE|1100|28]
-17:48:54 - Sending message [24|1400|3||SEND_BACKUP|1100|28]
-17:48:54 - Sending message [24|1400|4||SEND_BACKUP|1300|4]
-17:48:54 - Got message [28|1100|21||BACKUP|1400|24]
-17:48:55 - Sending message [24|1400|6||PING|1300|4]
-17:48:55 - Got message [28|1100|22||PING|1400|24]
-17:48:55 - Got message [4|1300|21||BACKUP|1400|24]
-17:48:55 - Got message [48|1200|11||TOKEN_REQUEST|1400|24]
-My RN {0=2, 1=1, 2=0, 3=0, 4=0}
+07:18:39 - Sending message [24|1400|6||PONG|1100|28]
+07:18:40 - Sending message [24|1400|8||SEND_BACKUP|1300|4]
+07:18:40 - Sending message [24|1400|7||SEND_BACKUP|1100|28]
+07:18:40 - Sending message [24|1400|9||ALL_UPDATES_DONE|1100|28]
+07:18:40 - Got message [28|1100|18||BACKUP|1400|24]
+07:18:41 - Got message [4|1300|10||BACKUP|1400|24]
+07:18:41 - Got message [28|1100|19||TOKEN|1400|24]
+TRYING TO RECEIVE THE TOKEN
+I RECEIVED THE TOKEN
+GOT TOKEN
+NOT MY NODE, SENDING TO 1100
+07:18:42 - Sending message [0|1600|10||NEW_NODE|1100|28]
+07:18:43 - Got message [28|1100|24||PING|1400|24]
+07:18:43 - Got message [28|1100|22||TOKEN_REQUEST|1400|24]
+My RN {0=4, 1=0, 2=0, 3=1, 4=0}
+IN TOKEN REQUEST
+TRYING TO SeND THE TOKEN TO 1100
+My RN {0=4, 1=0, 2=0, 3=1, 4=0}
+Token LN {0=3, 1=0, 2=0, 3=1, 4=0}
+first app.Token@2ebf425a second true
+IM SENDING THE TOKEN TO 1100
+07:18:44 - Sending message [24|1400|11||PING|1300|4]
+07:18:44 - Sending message [24|1400|12||PONG|1100|28]
+07:18:44 - Sending message [24|1400|13||TOKEN|1100|28]
+07:18:45 - Got message [4|1300|11||PONG|1400|24]
+07:18:45 - Predecessor 1300 is healthy!
+07:18:46 - Got message [48|1200|18||TOKEN_REQUEST|1400|24]
+My RN {0=4, 1=1, 2=0, 3=1, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-17:48:56 - Sending message [24|1400|7||PONG|1100|28]
-17:48:56 - Got message [4|1300|23||PONG|1400|24]
-17:48:56 - Predecessor 1300 is healthy!
-17:49:00 - Got message [4|1300|26||TOKEN_REQUEST|1400|24]
-My RN {0=2, 1=1, 2=2, 3=0, 4=0}
+07:18:48 - Sending message [24|1400|14||PING|1300|4]
+07:18:48 - Got message [28|1100|28||PING|1400|24]
+07:18:49 - Got message [4|1300|13||PONG|1400|24]
+07:18:49 - Predecessor 1300 is healthy!
+07:18:49 - Sending message [24|1400|15||PONG|1100|28]
+07:18:50 - Got message [4|1300|17||TOKEN_REQUEST|1400|24]
+My RN {0=4, 1=1, 2=1, 3=1, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-17:49:01 - Got message [28|1100|25||PING|1400|24]
-17:49:01 - Sending message [24|1400|8||PING|1300|4]
-17:49:02 - Sending message [24|1400|9||PONG|1100|28]
-17:49:02 - Got message [4|1300|31||PONG|1400|24]
-17:49:02 - Predecessor 1300 is healthy!
-17:49:03 - Got message [0|1600|32|1300,1300|UPDATE|1400|24]
-17:49:04 - Sending message [0|1600|10|1300,1300,1400|UPDATE|1100|28]
-17:49:05 - Pausing for 10000 ms
-17:49:05 - Got message [28|1100|28||PING|1400|24]
-17:49:05 - Sending message [24|1400|11||PING|1300|4]
-17:49:06 - Got message [4|1300|35||PONG|1400|24]
-17:49:06 - Predecessor 1300 is healthy!
-17:49:07 - Sending message [24|1400|12||PONG|1100|28]
-17:49:08 - Got message [0|1600|7||PUT|1400|24]
+07:18:52 - Pausing for 10000 ms
+07:18:53 - Sending message [24|1400|16||PING|1300|4]
+07:18:54 - Got message [28|1100|30||PING|1400|24]
+07:18:54 - Got message [4|1300|22||PONG|1400|24]
+07:18:54 - Predecessor 1300 is healthy!
+07:18:55 - Sending message [24|1400|17||PONG|1100|28]
+07:18:55 - Got message [0|1600|24|1300,1300|UPDATE|1400|24]
+07:18:56 - Sending message [0|1600|18|1300,1300,1400|UPDATE|1100|28]
+07:18:58 - Sending message [24|1400|19||PING|1300|4]
+07:18:58 - Got message [28|1100|33||PING|1400|24]
+07:18:59 - Got message [4|1300|25||PONG|1400|24]
+07:18:59 - Predecessor 1300 is healthy!
+07:18:59 - Sending message [24|1400|20||PONG|1100|28]
+07:19:00 - Got message [0|1600|7||PUT|1400|24]
 PROCEEDING TO ADD THE FILE
-AFTER ADDING MY FILE SYSTEM [app.MyFile@6fbd8b0e]
-17:49:09 - Sending message [24|1400|13||PUT|1100|28]
-17:49:11 - Sending message [24|1400|14||PING|1300|4]
-17:49:11 - Got message [28|1100|31||PING|1400|24]
-17:49:12 - Got message [4|1300|38||PONG|1400|24]
-17:49:12 - Predecessor 1300 is healthy!
-17:49:12 - Sending message [24|1400|15||PONG|1100|28]
-17:49:15 - Pausing for 5000000 ms
-17:49:16 - Got message [28|1100|33||PING|1400|24]
-17:49:16 - Sending message [24|1400|16||PING|1300|4]
-17:49:16 - Sending message [24|1400|17||PONG|1100|28]
-17:49:17 - Got message [4|1300|41||PONG|1400|24]
-17:49:17 - Predecessor 1300 is healthy!
-17:49:20 - Sending message [24|1400|18||PING|1300|4]
-17:49:21 - Got message [28|1100|34||PING|1400|24]
-17:49:21 - Got message [4|1300|43||PONG|1400|24]
-17:49:21 - Predecessor 1300 is healthy!
-17:49:22 - Sending message [24|1400|19||PONG|1100|28]
-17:49:25 - Got message [28|1100|36||PING|1400|24]
-17:49:26 - Sending message [24|1400|20||PING|1300|4]
-17:49:26 - Sending message [24|1400|21||PONG|1100|28]
-17:49:27 - Got message [4|1300|45||PONG|1400|24]
-17:49:27 - Predecessor 1300 is healthy!
-17:49:27 - Got message [0|1600|16|25|ASK_GET|1400|24]
-17:49:28 - Sending message [0|1600|22|25|ASK_GET|1100|28]
-17:49:31 - Got message [28|1100|38||PING|1400|24]
-17:49:31 - Sending message [24|1400|23||PING|1300|4]
-17:49:31 - Sending message [24|1400|24||PONG|1100|28]
-17:49:32 - Got message [4|1300|47||PONG|1400|24]
-17:49:32 - Predecessor 1300 is healthy!
-17:49:34 - Got message [0|1600|18||REMOVE_FILE|1400|24]
-PROCEEDING TO REMOVE THE FILE
-IM NOT REMOVING THE FILE, PASSING TO 1100
-17:49:34 - Sending message [24|1400|25||REMOVE_FILE|1100|28]
-17:49:35 - Sending message [24|1400|26||PING|1300|4]
-17:49:36 - Got message [28|1100|40||PING|1400|24]
-17:49:36 - Sending message [24|1400|27||PONG|1100|28]
-17:49:37 - Got message [4|1300|49||PONG|1400|24]
-17:49:37 - Predecessor 1300 is healthy!
-17:49:41 - Sending message [24|1400|28||PING|1300|4]
-17:49:41 - Got message [28|1100|41||PING|1400|24]
-17:49:41 - Got message [4|1300|51||PONG|1400|24]
-17:49:41 - Predecessor 1300 is healthy!
-17:49:42 - Sending message [24|1400|29||PONG|1100|28]
-17:49:46 - Sending message [24|1400|30||PING|1300|4]
-17:49:46 - Got message [28|1100|42||PING|1400|24]
-17:49:47 - Got message [4|1300|53||PONG|1400|24]
-17:49:47 - Predecessor 1300 is healthy!
-17:49:47 - Sending message [24|1400|31||PONG|1100|28]
+AFTER ADDING MY FILE SYSTEM [app.MyFile@16f7d03]
+07:19:01 - Sending message [24|1400|21||PUT|1100|28]
+07:19:02 - Pausing for 5000000 ms
+07:19:03 - Got message [28|1100|36||PING|1400|24]
+07:19:04 - Sending message [24|1400|22||PING|1300|4]
+07:19:04 - Sending message [24|1400|23||PONG|1100|28]
+07:19:05 - Got message [4|1300|29||PONG|1400|24]
+07:19:05 - Predecessor 1300 is healthy!
+07:19:08 - Got message [28|1100|38||PING|1400|24]
+07:19:08 - Sending message [24|1400|25||PONG|1100|28]
+07:19:09 - Sending message [24|1400|24||PING|1300|4]
+07:19:09 - Got message [48|1200|13|25|ASK_GET|1400|24]
+07:19:09 - Got message [4|1300|31||PONG|1400|24]
+07:19:09 - Predecessor 1300 is healthy!
+07:19:10 - Sending message [48|1200|26|25|ASK_GET|1100|28]
+07:19:13 - Sending message [24|1400|27||PING|1300|4]
+07:19:13 - Got message [28|1100|41||PING|1400|24]
+07:19:13 - Got message [4|1300|33||PONG|1400|24]
+07:19:13 - Predecessor 1300 is healthy!
+07:19:14 - Sending message [24|1400|28||PONG|1100|28]
+07:19:18 - Got message [28|1100|43||PING|1400|24]
+07:19:18 - Sending message [24|1400|29||PING|1300|4]
+07:19:19 - Got message [4|1300|35||PONG|1400|24]
+07:19:19 - Predecessor 1300 is healthy!
+07:19:19 - Sending message [24|1400|30||PONG|1100|28]
+07:19:20 - Got message [4|1300|36||FAILURE_UPDATE|1400|24]
+i 0 g 3 all: 5
+i 1 g 3 all: 5
+i 2 g 3 all: 5
+i 3 g 4 all: 5
+i 4 g 4 all: 5
+i 5 g 1 all: 5
+Successor: [28|localhost|1100] | [28|localhost|1100] | [28|localhost|1100] | [48|localhost|1200] | [48|localhost|1200] | [4|localhost|1300] | 
+ZABOD
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+07:19:21 - Sending message [4|1300|31||FAILURE_UPDATE|1100|28]
+07:19:23 - Got message [28|1100|46||PING|1400|24]
+07:19:23 - Sending message [24|1400|32||PING|1300|4]
+07:19:24 - Got message [4|1300|37||PONG|1400|24]
+07:19:24 - Predecessor 1300 is healthy!
+07:19:24 - Sending message [24|1400|33||PONG|1100|28]
+07:19:28 - Got message [28|1100|48||PING|1400|24]
+07:19:29 - Sending message [24|1400|34||PING|1300|4]
+07:19:29 - Got message [4|1300|40||PONG|1400|24]
+07:19:29 - Predecessor 1300 is healthy!
+07:19:29 - Sending message [24|1400|35||PONG|1100|28]
+07:19:33 - Got message [28|1100|50||PING|1400|24]
+07:19:33 - Sending message [24|1400|36||PING|1300|4]
+07:19:34 - Sending message [24|1400|37||PONG|1100|28]
+07:19:35 - Got message [4|1300|42||PONG|1400|24]
+07:19:35 - Predecessor 1300 is healthy!
+07:19:38 - Sending message [24|1400|38||PING|1300|4]
+07:19:38 - Got message [28|1100|52||PING|1400|24]
+07:19:39 - Got message [4|1300|43||PONG|1400|24]
+07:19:39 - Predecessor 1300 is healthy!
+07:19:40 - Sending message [24|1400|39||PONG|1100|28]
+07:19:43 - Sending message [24|1400|40||PING|1300|4]
+07:19:44 - Got message [28|1100|54||PING|1400|24]
+07:19:45 - Got message [4|1300|45||PONG|1400|24]
+07:19:45 - Predecessor 1300 is healthy!
+07:19:45 - Sending message [24|1400|41||PONG|1100|28]
+07:19:48 - Got message [28|1100|56||PING|1400|24]
+07:19:49 - Sending message [24|1400|42||PING|1300|4]
+07:19:49 - Sending message [24|1400|43||PONG|1100|28]
+07:19:50 - Got message [4|1300|48||PONG|1400|24]
+07:19:50 - Predecessor 1300 is healthy!
+07:19:53 - Sending message [24|1400|44||PING|1300|4]

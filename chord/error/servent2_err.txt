@@ -1,2 +1,1 @@
-17:48:37 - Couldn't send message: [4|1300|4||TOKEN_REQUEST|1400|24]
-17:48:38 - Couldn't send message: [4|1300|5||TOKEN_REQUEST|1600|0]
+07:19:10 - Couldn't send message: [4|1300|32||PING|1600|0]

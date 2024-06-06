@@ -50,7 +50,7 @@ public class UpdateHandler implements MessageHandler {
 					AppConfig.chordState.addNodes(allNodes);
 
 					// Ask for successor backup
-					System.out.println("SEND ME YOUR BACKUP PORT " + AppConfig.chordState.getPredecessor().getListenerPort());
+					System.out.println("SEND ME YOUR BACKUP PORT " + AppConfig.chordState.getNextNodePort());
 					SendMeYouBackupMessage b = new SendMeYouBackupMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.getNextNodePort());
 					MessageUtil.sendMessage(b);
 					// Ask for predecessor backup

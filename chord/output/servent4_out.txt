@@ -1,94 +1,61 @@
-17:48:44 - Starting servent [0|localhost|1600]
-17:48:45 - Pausing for 10000 ms
-17:48:46 - Got message [28|1100|12||TOKEN_REQUEST|1600|0]
-My RN {0=2, 1=0, 2=0, 3=0, 4=0}
+07:18:32 - Starting servent [0|localhost|1600]
+07:18:32 - Pausing for 10000 ms
+CHORD 1400 IS ADDING ME
+07:18:35 - Sending message [0|1600|0||NEW_NODE|1400|24]
+07:18:36 - Got message [24|1400|5||TOKEN_REQUEST|1600|0]
+My RN {0=0, 1=0, 2=0, 3=1, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-CHORD 1100 IS ADDING ME
-17:48:50 - Sending message [0|1600|0||NEW_NODE|1100|28]
 TRYING TO ADD FILE D:\Java (Programming)\IntelliJprojects\RAFBook\root\46.txt TO CHORD POS 46
 ADDING FILE D:\Java (Programming)\IntelliJprojects\RAFBook\root\46.txt TO CHORD POS 46
 WAITING TO BE ADDED...
-17:48:55 - Got message [48|1200|12||TOKEN_REQUEST|1600|0]
-My RN {0=2, 1=1, 2=0, 3=0, 4=0}
+07:18:43 - Got message [28|1100|23||TOKEN_REQUEST|1600|0]
+My RN {0=4, 1=0, 2=0, 3=1, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-17:49:00 - Got message [4|1300|27||TOKEN_REQUEST|1600|0]
-My RN {0=2, 1=1, 2=2, 3=0, 4=0}
+07:18:46 - Got message [48|1200|19||TOKEN_REQUEST|1600|0]
+My RN {0=4, 1=1, 2=0, 3=1, 4=0}
 IN TOKEN REQUEST
 I dont have the token!
-17:49:01 - Got message [4|1300|30||WELCOME|1600|0]
-17:49:02 - Sending message [0|1600|1|1300|UPDATE|1300|4]
-17:49:05 - Got message [4|1300|33||ADD_FRIEND|1600|0]
-17:49:05 - Added friend chordID 4 on port 1300
-17:49:06 - Sending message [0|1600|2||ADD_FRIEND|1300|4]
-17:49:06 - Got message [4|1300|34||PING|1600|0]
-17:49:07 - Got message [0|1600|19|1300,1300,1400,1100,1200|UPDATE|1600|0]
-SEND ME YOUR BACKUP PORT 1200
+07:18:50 - Got message [4|1300|18||TOKEN_REQUEST|1600|0]
+My RN {0=4, 1=1, 2=1, 3=1, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+07:18:53 - Got message [4|1300|21||ADD_FRIEND|1600|0]
+07:18:53 - Added friend chordID 4 on port 1300
+07:18:53 - Got message [4|1300|20||WELCOME|1600|0]
+07:18:54 - Sending message [0|1600|1||ADD_FRIEND|1300|4]
+07:18:54 - Sending message [0|1600|2|1300|UPDATE|1300|4]
+07:18:55 - Got message [4|1300|23||PING|1600|0]
+07:18:56 - Sending message [0|1600|3||PONG|1300|4]
+07:18:59 - Got message [0|1600|26|1300,1300,1400,1100,1200|UPDATE|1600|0]
+SEND ME YOUR BACKUP PORT 1300
 SEND ME YOUR BACKUP PORT 1200
 I SHOULD NOTIFY?
 PROCEEDING TO ADD THE FILE
-AFTER ADDING MY FILE SYSTEM [app.MyFile@74600fdb]
-17:49:07 - Pausing for 20000 ms
-17:49:07 - Sending message [0|1600|3||PONG|1300|4]
-17:49:07 - Sending message [0|1600|6||ALL_UPDATES_DONE|1300|4]
-17:49:07 - Sending message [0|1600|4||SEND_BACKUP|1300|4]
-17:49:08 - Sending message [0|1600|7||PUT|1400|24]
-17:49:08 - Sending message [0|1600|5||SEND_BACKUP|1200|48]
-17:49:09 - Got message [4|1300|36||BACKUP|1600|0]
-17:49:09 - Got message [48|1200|21||BACKUP|1600|0]
-17:49:10 - Sending message [0|1600|8||PING|1200|48]
-17:49:11 - Got message [4|1300|37||PING|1600|0]
-17:49:11 - Got message [48|1200|24||PONG|1600|0]
-17:49:11 - Predecessor 1200 is healthy!
-17:49:11 - Got message [48|1200|22||BACKUP|1600|0]
-17:49:11 - Sending message [0|1600|9||PONG|1300|4]
-17:49:15 - Sending message [0|1600|10||PING|1200|48]
-17:49:15 - Got message [4|1300|40||PING|1600|0]
-17:49:16 - Got message [4|1300|39||LIST_FILES|1600|0]
-MY FILE LIST [app.MyFile@74600fdb]
-ADDING FILE TO LIST TO SEND app.MyFile@74600fdb
+AFTER ADDING MY FILE SYSTEM [app.MyFile@5d99ce24]
+07:18:59 - Pausing for 20000 ms
+07:18:59 - Got message [4|1300|26||PING|1600|0]
+07:19:00 - Sending message [0|1600|4||SEND_BACKUP|1300|4]
+07:19:00 - Sending message [0|1600|6||ALL_UPDATES_DONE|1300|4]
+07:19:00 - Sending message [0|1600|7||PUT|1400|24]
+07:19:00 - Sending message [0|1600|5||SEND_BACKUP|1200|48]
+07:19:00 - Got message [4|1300|27||BACKUP|1600|0]
+07:19:01 - Sending message [0|1600|8||PONG|1300|4]
+07:19:01 - Sending message [0|1600|9||PING|1200|48]
+07:19:01 - Got message [48|1200|27||BACKUP|1600|0]
+07:19:02 - Got message [48|1200|28||PONG|1600|0]
+07:19:02 - Predecessor 1200 is healthy!
+07:19:03 - Got message [4|1300|28||LIST_FILES|1600|0]
+MY FILE LIST [app.MyFile@5d99ce24]
+ADDING FILE TO LIST TO SEND app.MyFile@5d99ce24
 SENDING MY FILE LIST TO 1300
-17:49:17 - Sending message [0|1600|11||PONG|1300|4]
-17:49:17 - Sending message [0|1600|12||LIST_FILES|1300|4]
-17:49:19 - Warning! Predecessor 1200 passed weak limit for health check!
-17:49:20 - Sending message [0|1600|13||IS_REALLY_DEAD|1100|28]
-17:49:21 - Got message [4|1300|42||PING|1600|0]
-17:49:22 - Sending message [0|1600|14||PONG|1300|4]
-DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1200
-17:49:24 - Hazard! Predecessor 1200 died!
-17:49:26 - Got message [4|1300|44||PING|1600|0]
-17:49:26 - Sending message [0|1600|15||PONG|1300|4]
-TRYING TO GET FILE 25.txt
-GETTING FILE 25.txt
-PROCEEDING TO GET THE FILE
-MY PREDECESSOR 48 MY CHORD ID 0
-ASKING 1400 FOR FILE
-17:49:27 - Please wait...
-17:49:27 - Pausing for 6000 ms
-17:49:27 - Sending message [0|1600|16|25|ASK_GET|1400|24]
-DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1200
-17:49:29 - Hazard! Predecessor 1200 died!
-17:49:29 - Got message [28|1100|37||TELL_GET|1600|0]
-17:49:29 - Got key 25 with file D:\Java (Programming)\IntelliJprojects\RAFBook\root\25.txt
-17:49:31 - Got message [4|1300|46||PING|1600|0]
-17:49:32 - Sending message [0|1600|17||PONG|1300|4]
-$$$$$$$$$$$$$D:\Java (Programming)\IntelliJprojects\RAFBook\root\46.txt
-PROCEEDING TO REMOVE THE FILE
-IM NOT REMOVING THE FILE, PASSING TO 1400
-17:49:33 - Pausing for 5000000 ms
-17:49:34 - Sending message [0|1600|18||REMOVE_FILE|1400|24]
-DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1200
-17:49:34 - Hazard! Predecessor 1200 died!
-17:49:35 - Got message [4|1300|48||PING|1600|0]
-17:49:36 - Sending message [0|1600|19||PONG|1300|4]
-DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1200
-17:49:39 - Hazard! Predecessor 1200 died!
-17:49:41 - Got message [4|1300|50||PING|1600|0]
-17:49:42 - Sending message [0|1600|20||PONG|1300|4]
-DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1200
-17:49:44 - Hazard! Predecessor 1200 died!
-17:49:45 - Got message [4|1300|52||PING|1600|0]
-17:49:46 - Sending message [0|1600|21||PONG|1300|4]
-DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1200
-17:49:49 - Hazard! Predecessor 1200 died!
+07:19:03 - Got message [48|1200|29||BACKUP|1600|0]
+07:19:04 - Sending message [0|1600|10||LIST_FILES|1300|4]
+07:19:05 - Got message [4|1300|30||PING|1600|0]
+07:19:05 - Sending message [0|1600|11||PING|1200|48]
+07:19:06 - Sending message [0|1600|12||PONG|1300|4]
+07:19:06 - Got message [48|1200|32||PONG|1600|0]
+07:19:06 - Predecessor 1200 is healthy!
+07:19:08 - Got message [48|1200|33|25|ASK_GET|1600|0]
+07:19:09 - Sending message [48|1200|13|25|ASK_GET|1400|24]

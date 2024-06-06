@@ -1,163 +1,162 @@
-17:48:34 - Starting servent [4|localhost|1300]
-17:48:34 - Pausing for 30000 ms
+07:18:22 - Starting servent [4|localhost|1300]
+07:18:22 - Pausing for 30000 ms
 CHORD 1100 IS ADDING ME
-17:48:35 - Sending message [4|1300|0||NEW_NODE|1100|28]
-17:48:36 - Got message [28|1100|0||WELCOME|1300|4]
-17:48:37 - Got message [48|1200|0||NEW_NODE|1300|4]
+07:18:24 - Sending message [4|1300|0||NEW_NODE|1100|28]
+07:18:27 - Got message [28|1100|5||WELCOME|1300|4]
+07:18:28 - Got message [28|1100|7||PING|1300|4]
+07:18:29 - Sending message [4|1300|1|1100|UPDATE|1100|28]
+07:18:29 - Sending message [4|1300|2||PONG|1100|28]
+07:18:30 - Got message [4|1300|7|1100,1100,1200|UPDATE|1300|4]
+SEND ME YOUR BACKUP PORT 1100
+SEND ME YOUR BACKUP PORT 1200
+I SHOULD NOTIFY?
+07:18:30 - Sending message [4|1300|4||SEND_BACKUP|1200|48]
+07:18:31 - Sending message [4|1300|5||ALL_UPDATES_DONE|1100|28]
+07:18:31 - Sending message [4|1300|3||SEND_BACKUP|1100|28]
+07:18:32 - Got message [48|1200|8||BACKUP|1300|4]
+07:18:33 - Got message [28|1100|10||BACKUP|1300|4]
+07:18:33 - Got message [28|1100|11||PING|1300|4]
+07:18:34 - Sending message [4|1300|6||PONG|1100|28]
+07:18:35 - Sending message [4|1300|7||PING|1200|48]
+07:18:35 - Got message [28|1100|13||BACKUP|1300|4]
+07:18:36 - Got message [48|1200|10||PONG|1300|4]
+07:18:36 - Predecessor 1200 is healthy!
+07:18:37 - Got message [24|1400|4||TOKEN_REQUEST|1300|4]
+My RN {0=0, 1=0, 2=0, 3=1, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+07:18:38 - Got message [24|1400|11|1100,1100,1200|UPDATE|1300|4]
+07:18:39 - Sending message [24|1400|8|1100,1100,1200,1300|UPDATE|1400|24]
+07:18:40 - Sending message [4|1300|9||PING|1200|48]
+07:18:40 - Got message [24|1400|8||SEND_BACKUP|1300|4]
+07:18:40 - Got message [48|1200|13||PONG|1300|4]
+07:18:40 - Predecessor 1200 is healthy!
+07:18:41 - Sending message [4|1300|10||BACKUP|1400|24]
+07:18:43 - Got message [28|1100|21||TOKEN_REQUEST|1300|4]
+My RN {0=4, 1=0, 2=0, 3=1, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+07:18:44 - Got message [24|1400|11||PING|1300|4]
+07:18:45 - Sending message [4|1300|12||PING|1200|48]
+07:18:45 - Sending message [4|1300|11||PONG|1400|24]
+07:18:46 - Got message [48|1200|15||PONG|1300|4]
+07:18:46 - Predecessor 1200 is healthy!
+07:18:47 - Got message [48|1200|17||TOKEN_REQUEST|1300|4]
+My RN {0=4, 1=1, 2=0, 3=1, 4=0}
+IN TOKEN REQUEST
+I dont have the token!
+07:18:48 - Got message [24|1400|14||PING|1300|4]
+07:18:49 - Got message [0|1600|21||NEW_NODE|1300|4]
 SENDING TOKEN REQUEST TO 1100 NUMBER 1 AND I AM ID 2
 SENDING TOKEN REQUEST TO 1200 NUMBER 1 AND I AM ID 2
 SENDING TOKEN REQUEST TO 1400 NUMBER 1 AND I AM ID 2
 SENDING TOKEN REQUEST TO 1600 NUMBER 1 AND I AM ID 2
 GETTING TOKEN
 WAITING FOR TOKEN
-17:48:37 - Sending message [4|1300|4||TOKEN_REQUEST|1400|24]
-17:48:37 - Sending message [4|1300|3||TOKEN_REQUEST|1200|48]
-17:48:38 - Sending message [4|1300|1|1100|UPDATE|1100|28]
-17:48:38 - Sending message [4|1300|5||TOKEN_REQUEST|1600|0]
-17:48:38 - Sending message [4|1300|2||TOKEN_REQUEST|1100|28]
-17:48:39 - Got message [4|1300|1|1100,1100|UPDATE|1300|4]
-SEND ME YOUR BACKUP PORT 1100
-SEND ME YOUR BACKUP PORT 1100
-I SHOULD NOTIFY?
-17:48:40 - Sending message [4|1300|7||SEND_BACKUP|1100|28]
-17:48:40 - Sending message [4|1300|9||PING|1100|28]
-17:48:40 - Sending message [4|1300|6||SEND_BACKUP|1100|28]
-17:48:40 - Got message [28|1100|3|46|ASK_GET|1300|4]
-17:48:40 - Sending message [4|1300|8||ALL_UPDATES_DONE|1100|28]
-17:48:41 - Got message [28|1100|2||PING|1300|4]
-17:48:41 - Sending message [4|1300|10||TELL_GET|1100|28]
-17:48:41 - Got message [28|1100|4||BACKUP|1300|4]
-17:48:42 - Got message [28|1100|6||BACKUP|1300|4]
-17:48:42 - Got message [28|1100|5||PONG|1300|4]
-17:48:42 - Predecessor 1100 is healthy!
-17:48:42 - Got message [28|1100|7||TOKEN|1300|4]
-TRYING TO RECEIVE THE TOKEN
-I RECEIVED THE TOKEN
-GOT TOKEN
-SENDING BACKUP TO 1100
-SENDING WELCOME TO 1200
-WAITING FOR UPDATES
-17:48:42 - Sending message [4|1300|11||PONG|1100|28]
-17:48:42 - Sending message [4|1300|12||BACKUP|1100|28]
-17:48:43 - Sending message [4|1300|13||WELCOME|1200|48]
-17:48:44 - Got message [48|1200|1|1300|UPDATE|1300|4]
-17:48:45 - Got message [28|1100|8||PING|1300|4]
-17:48:46 - Sending message [4|1300|15||PING|1200|48]
-17:48:46 - Sending message [48|1200|14|1300,1300|UPDATE|1100|28]
-17:48:46 - Got message [28|1100|10||TOKEN_REQUEST|1300|4]
-My RN {0=2, 1=0, 2=1, 3=0, 4=0}
-IN TOKEN REQUEST
-17:48:46 - Sending message [4|1300|16||PONG|1100|28]
-17:48:47 - Got message [48|1200|5||ALL_UPDATES_DONE|1300|4]
-GOT ALL UPDATES
-GIVING TOKEN TO 1100
-I dont have the token!
-17:48:47 - Got message [48|1200|2||PONG|1300|4]
-17:48:47 - Predecessor 1200 is healthy!
-17:48:48 - Got message [48|1200|3||SEND_BACKUP|1300|4]
-17:48:48 - Sending message [4|1300|17||TOKEN|1100|28]
-17:48:49 - Got message [28|1100|15||BACKUP|1300|4]
-17:48:49 - Sending message [4|1300|18||BACKUP|1200|48]
-17:48:50 - Sending message [4|1300|19||PING|1200|48]
-17:48:52 - Got message [24|1400|7|1100,1100,1200|UPDATE|1300|4]
-17:48:52 - Got message [48|1200|6||PONG|1300|4]
-17:48:52 - Predecessor 1200 is healthy!
-17:48:53 - Sending message [24|1400|20|1100,1100,1200,1300|UPDATE|1400|24]
-17:48:54 - Got message [24|1400|4||SEND_BACKUP|1300|4]
-17:48:55 - Got message [24|1400|6||PING|1300|4]
-17:48:55 - Sending message [4|1300|21||BACKUP|1400|24]
-17:48:55 - Sending message [4|1300|22||PING|1200|48]
-17:48:56 - Got message [48|1200|10||TOKEN_REQUEST|1300|4]
-My RN {0=2, 1=1, 2=1, 3=0, 4=0}
-IN TOKEN REQUEST
-I dont have the token!
-17:48:56 - Got message [48|1200|13||PONG|1300|4]
-17:48:56 - Predecessor 1200 is healthy!
-17:48:56 - Sending message [4|1300|23||PONG|1400|24]
-17:48:59 - Got message [0|1600|15||NEW_NODE|1300|4]
-SENDING TOKEN REQUEST TO 1100 NUMBER 2 AND I AM ID 2
-SENDING TOKEN REQUEST TO 1200 NUMBER 2 AND I AM ID 2
-SENDING TOKEN REQUEST TO 1400 NUMBER 2 AND I AM ID 2
-SENDING TOKEN REQUEST TO 1600 NUMBER 2 AND I AM ID 2
-GETTING TOKEN
-WAITING FOR TOKEN
-17:48:59 - Sending message [4|1300|24||TOKEN_REQUEST|1100|28]
-17:49:00 - Sending message [4|1300|25||TOKEN_REQUEST|1200|48]
-17:49:00 - Sending message [4|1300|27||TOKEN_REQUEST|1600|0]
-17:49:00 - Sending message [4|1300|26||TOKEN_REQUEST|1400|24]
-17:49:00 - Got message [48|1200|16||TOKEN|1300|4]
+07:18:49 - Sending message [4|1300|13||PONG|1400|24]
+07:18:50 - Sending message [4|1300|18||TOKEN_REQUEST|1600|0]
+07:18:50 - Sending message [4|1300|15||TOKEN_REQUEST|1100|28]
+07:18:50 - Sending message [4|1300|14||PING|1200|48]
+07:18:50 - Sending message [4|1300|17||TOKEN_REQUEST|1400|24]
+07:18:50 - Sending message [4|1300|16||TOKEN_REQUEST|1200|48]
+07:18:51 - Got message [48|1200|22||PONG|1300|4]
+07:18:51 - Predecessor 1200 is healthy!
+07:18:52 - Got message [48|1200|23||TOKEN|1300|4]
 TRYING TO RECEIVE THE TOKEN
 I RECEIVED THE TOKEN
 GOT TOKEN
 SENDING BACKUP TO 1200
 SENDING WELCOME TO 1600
 WAITING FOR UPDATES
-17:49:01 - Got message [24|1400|8||PING|1300|4]
-17:49:01 - Sending message [4|1300|28||PING|1200|48]
-17:49:01 - Sending message [4|1300|29||BACKUP|1200|48]
-17:49:01 - Sending message [4|1300|30||WELCOME|1600|0]
-17:49:02 - Sending message [4|1300|31||PONG|1400|24]
-17:49:02 - Got message [0|1600|1|1300|UPDATE|1300|4]
-17:49:02 - Got message [48|1200|17||PONG|1300|4]
-17:49:02 - Predecessor 1200 is healthy!
-17:49:03 - Sending message [0|1600|32|1300,1300|UPDATE|1400|24]
 SENDING FRIEND MESSAGE TO 1600
-17:49:04 - Pausing for 10000 ms
-17:49:05 - Sending message [4|1300|33||ADD_FRIEND|1600|0]
-17:49:05 - Got message [24|1400|11||PING|1300|4]
-17:49:06 - Got message [0|1600|2||ADD_FRIEND|1300|4]
-17:49:06 - Added friend chordID 0 on port 1600
-17:49:06 - Sending message [4|1300|34||PING|1600|0]
-17:49:06 - Sending message [4|1300|35||PONG|1400|24]
-17:49:07 - Got message [0|1600|3||PONG|1300|4]
-17:49:07 - Predecessor 1600 is healthy!
-17:49:07 - Got message [0|1600|6||ALL_UPDATES_DONE|1300|4]
+07:18:52 - Pausing for 10000 ms
+07:18:52 - Sending message [4|1300|19||BACKUP|1200|48]
+07:18:53 - Sending message [4|1300|21||ADD_FRIEND|1600|0]
+07:18:53 - Sending message [4|1300|20||WELCOME|1600|0]
+07:18:53 - Got message [24|1400|16||PING|1300|4]
+07:18:54 - Sending message [4|1300|22||PONG|1400|24]
+07:18:54 - Got message [0|1600|1||ADD_FRIEND|1300|4]
+07:18:54 - Added friend chordID 0 on port 1600
+07:18:54 - Got message [0|1600|2|1300|UPDATE|1300|4]
+07:18:55 - Sending message [4|1300|23||PING|1600|0]
+07:18:55 - Sending message [0|1600|24|1300,1300|UPDATE|1400|24]
+07:18:56 - Got message [0|1600|3||PONG|1300|4]
+07:18:56 - Predecessor 1600 is healthy!
+07:18:58 - Got message [24|1400|19||PING|1300|4]
+07:18:59 - Sending message [4|1300|25||PONG|1400|24]
+07:18:59 - Sending message [4|1300|26||PING|1600|0]
+07:19:00 - Got message [0|1600|4||SEND_BACKUP|1300|4]
+07:19:00 - Got message [0|1600|6||ALL_UPDATES_DONE|1300|4]
 GOT ALL UPDATES
-17:49:07 - Got message [0|1600|4||SEND_BACKUP|1300|4]
-17:49:09 - Sending message [4|1300|36||BACKUP|1600|0]
-17:49:11 - Got message [24|1400|14||PING|1300|4]
-17:49:11 - Sending message [4|1300|37||PING|1600|0]
-17:49:11 - Got message [0|1600|9||PONG|1300|4]
-17:49:11 - Predecessor 1600 is healthy!
-17:49:12 - Sending message [4|1300|38||PONG|1400|24]
+07:19:00 - Sending message [4|1300|27||BACKUP|1600|0]
+07:19:01 - Got message [0|1600|8||PONG|1300|4]
+07:19:01 - Predecessor 1600 is healthy!
 ASKING FOR LIST OF ALL FILES FROM 1600
-17:49:14 - Pausing for 5000000 ms
-17:49:15 - Sending message [4|1300|40||PING|1600|0]
-17:49:16 - Sending message [4|1300|39||LIST_FILES|1600|0]
-17:49:16 - Got message [24|1400|16||PING|1300|4]
-17:49:17 - Got message [0|1600|11||PONG|1300|4]
-17:49:17 - Predecessor 1600 is healthy!
-17:49:17 - Got message [0|1600|12||LIST_FILES|1300|4]
-17:49:17 - Files from 1600 are:
-17:49:17 - * D:\Java (Programming)\IntelliJprojects\RAFBook\root\46.txt | PRIVATE
-17:49:17 - Sending message [4|1300|41||PONG|1400|24]
-17:49:20 - Got message [24|1400|18||PING|1300|4]
-17:49:21 - Sending message [4|1300|42||PING|1600|0]
-17:49:21 - Sending message [4|1300|43||PONG|1400|24]
-17:49:22 - Got message [0|1600|14||PONG|1300|4]
-17:49:22 - Predecessor 1600 is healthy!
-17:49:26 - Sending message [4|1300|44||PING|1600|0]
-17:49:26 - Got message [24|1400|20||PING|1300|4]
-17:49:26 - Got message [0|1600|15||PONG|1300|4]
-17:49:26 - Predecessor 1600 is healthy!
-17:49:27 - Sending message [4|1300|45||PONG|1400|24]
-17:49:31 - Got message [24|1400|23||PING|1300|4]
-17:49:31 - Sending message [4|1300|46||PING|1600|0]
-17:49:32 - Sending message [4|1300|47||PONG|1400|24]
-17:49:32 - Got message [0|1600|17||PONG|1300|4]
-17:49:32 - Predecessor 1600 is healthy!
-17:49:35 - Got message [24|1400|26||PING|1300|4]
-17:49:35 - Sending message [4|1300|48||PING|1600|0]
-17:49:36 - Got message [0|1600|19||PONG|1300|4]
-17:49:36 - Predecessor 1600 is healthy!
-17:49:36 - Sending message [4|1300|49||PONG|1400|24]
-17:49:41 - Got message [24|1400|28||PING|1300|4]
-17:49:41 - Sending message [4|1300|50||PING|1600|0]
-17:49:41 - Sending message [4|1300|51||PONG|1400|24]
-17:49:42 - Got message [0|1600|20||PONG|1300|4]
-17:49:42 - Predecessor 1600 is healthy!
-17:49:45 - Sending message [4|1300|52||PING|1600|0]
-17:49:46 - Got message [24|1400|30||PING|1300|4]
-17:49:46 - Got message [0|1600|21||PONG|1300|4]
-17:49:46 - Predecessor 1600 is healthy!
-17:49:47 - Sending message [4|1300|53||PONG|1400|24]
+07:19:02 - Pausing for 5000000 ms
+07:19:03 - Sending message [4|1300|28||LIST_FILES|1600|0]
+07:19:04 - Got message [24|1400|22||PING|1300|4]
+07:19:04 - Got message [0|1600|10||LIST_FILES|1300|4]
+07:19:04 - Files from 1600 are:
+07:19:04 - * D:\Java (Programming)\IntelliJprojects\RAFBook\root\46.txt | PRIVATE
+07:19:05 - Sending message [4|1300|29||PONG|1400|24]
+07:19:05 - Sending message [4|1300|30||PING|1600|0]
+07:19:06 - Got message [0|1600|12||PONG|1300|4]
+07:19:06 - Predecessor 1600 is healthy!
+07:19:09 - Got message [24|1400|24||PING|1300|4]
+07:19:09 - Sending message [4|1300|31||PONG|1400|24]
+07:19:10 - Sending message [4|1300|32||PING|1600|0]
+07:19:13 - Got message [24|1400|27||PING|1300|4]
+07:19:13 - Sending message [4|1300|33||PONG|1400|24]
+07:19:14 - Warning! Predecessor 1600 passed weak limit for health check!
+07:19:15 - Sending message [4|1300|34||IS_REALLY_DEAD|1200|48]
+07:19:18 - Got message [24|1400|29||PING|1300|4]
+DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH 1600
+07:19:19 - Hazard! Predecessor 1600 died!
+DEADDDDDDZOOOOOOOOOOOOONEEEEEEEEEEEEEEEEEEEEEEEEEEE 1600
+RESTRUCTURE GETTING TOKEN
+RESTRUCTURE GOT TOKEN
+i 0 g 2 all: 5
+i 1 g 2 all: 5
+i 2 g 2 all: 5
+i 3 g 2 all: 5
+i 4 g 2 all: 5
+i 5 g 4 all: 5
+Successor: [24|localhost|1400] | [24|localhost|1400] | [24|localhost|1400] | [24|localhost|1400] | [24|localhost|1400] | [48|localhost|1200] | 
+ZABOD
+RESTRUCTURE WAITING FOR UPDATES
+07:19:19 - Sending message [4|1300|35||PONG|1400|24]
+07:19:20 - Sending message [4|1300|36||FAILURE_UPDATE|1400|24]
+07:19:23 - Got message [24|1400|32||PING|1300|4]
+07:19:23 - Got message [4|1300|39||FAILURE_UPDATE|1300|4]
+SEND ME YOUR BACKUP PORT 1200
+I SHOULD NOTIFY?
+RESTRUCTURE GOT ALL UPDATES
+07:19:24 - Sending message [4|1300|37||PONG|1400|24]
+07:19:24 - Sending message [4|1300|38||SEND_BACKUP|1200|48]
+07:19:25 - Got message [48|1200|40||BACKUP|1300|4]
+07:19:29 - Got message [24|1400|34||PING|1300|4]
+07:19:29 - Sending message [4|1300|39||PING|1200|48]
+07:19:29 - Sending message [4|1300|40||PONG|1400|24]
+07:19:30 - Got message [48|1200|42||PONG|1300|4]
+07:19:30 - Predecessor 1200 is healthy!
+07:19:33 - Got message [24|1400|36||PING|1300|4]
+07:19:35 - Sending message [4|1300|41||PING|1200|48]
+07:19:35 - Sending message [4|1300|42||PONG|1400|24]
+07:19:36 - Got message [48|1200|44||PONG|1300|4]
+07:19:36 - Predecessor 1200 is healthy!
+07:19:38 - Got message [24|1400|38||PING|1300|4]
+07:19:39 - Sending message [4|1300|43||PONG|1400|24]
+07:19:40 - Sending message [4|1300|44||PING|1200|48]
+07:19:40 - Got message [48|1200|46||PONG|1300|4]
+07:19:40 - Predecessor 1200 is healthy!
+07:19:43 - Got message [24|1400|40||PING|1300|4]
+07:19:44 - Sending message [4|1300|46||PING|1200|48]
+07:19:45 - Sending message [4|1300|45||PONG|1400|24]
+07:19:45 - Got message [48|1200|48||PONG|1300|4]
+07:19:45 - Predecessor 1200 is healthy!
+07:19:49 - Got message [24|1400|42||PING|1300|4]
+07:19:49 - Sending message [4|1300|47||PING|1200|48]
+07:19:50 - Sending message [4|1300|48||PONG|1400|24]
+07:19:51 - Got message [48|1200|50||PONG|1300|4]
+07:19:51 - Predecessor 1200 is healthy!
+07:19:53 - Got message [24|1400|44||PING|1300|4]

@@ -12,6 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import servent.handler.FailureChordHandler;
 import servent.message.*;
 import servent.message.util.MessageUtil;
 
@@ -56,6 +57,8 @@ public class ChordState implements Runnable{
 
 	public AtomicBoolean predecessorConfirmedDead;
 
+	public AtomicBoolean alreadySent;
+
 	public AtomicInteger healthPort;
 
 	private Long lastPredecessorHealthCheck;
@@ -72,6 +75,7 @@ public class ChordState implements Runnable{
 
 	public AtomicInteger backupSequence;
 
+	public final Object restructureSync = new Object();
 	public final Object chordSync = new Object();
 
 
@@ -125,6 +129,7 @@ public class ChordState implements Runnable{
 		predecessorHealth = new AtomicBoolean(true);
 		predecessorConfirmedDead = new AtomicBoolean(false);
 		healthPort = new AtomicInteger(-1);
+		alreadySent = new AtomicBoolean(false);
 	}
 
 	/**
@@ -327,11 +332,6 @@ public class ChordState implements Runnable{
 				}
 			}
 		}
-//		System.out.print("Successor: ");
-//		for (int i = 0; i < 6; i++){
-//			System.out.print(successorTable[i] + " | ");
-//		}
-//		System.out.println();
 	}
 
 	/**
@@ -373,6 +373,80 @@ public class ChordState implements Runnable{
 		}
 
 		updateSuccessorTable();
+	}
+
+	private void updateRemoveSuccessorTable(ServentInfo deadNode) {
+
+		List<ServentInfo> allChords = new ArrayList<>(AppConfig.serventInfoList);
+		allChords.sort(new Comparator<ServentInfo>() {
+			@Override
+			public int compare(ServentInfo o1, ServentInfo o2) {
+				return o1.getChordId() - o2.getChordId();
+			}
+
+		});
+		int j = 1;
+		int g;
+		for (int i = 0; i < successorTable.length; i++) {
+			int cur = j + AppConfig.myServentInfo.getChordId();
+			cur %= CHORD_SIZE;
+			for (g = 0; g < allChords.size(); g++){
+				if (cur <= allChords.get(g).getChordId() && allChords.get(g).getChordId() != deadNode.getChordId()){
+					break;
+				}
+			}
+			if (g >= allChords.size()){
+				g = 0;
+				if (allChords.get(g).getChordId() == deadNode.getChordId()) {
+					g = 1;
+				}
+			}
+			System.out.println("i " + i + " g " + g + " all: " + allChords.size());
+			successorTable[i] = allChords.get(g);
+			j *= 2;
+		}
+		System.out.print("Successor: ");
+		for (int i = 0; i < successorTable.length; i++){
+			System.out.print(successorTable[i] + " | ");
+		}
+		System.out.println();
+	}
+
+	public void removeNode(ServentInfo deadNode) {
+		allNodeInfo.remove(deadNode);
+
+		allNodeInfo.sort(new Comparator<ServentInfo>() {
+
+			@Override
+			public int compare(ServentInfo o1, ServentInfo o2) {
+				return o1.getChordId() - o2.getChordId();
+			}
+
+		});
+
+		List<ServentInfo> newList = new ArrayList<>();
+		List<ServentInfo> newList2 = new ArrayList<>();
+
+		int myId = AppConfig.myServentInfo.getChordId();
+		for (ServentInfo serventInfo : allNodeInfo) {
+			if (serventInfo.getChordId() < myId) {
+				newList2.add(serventInfo);
+			} else {
+				newList.add(serventInfo);
+			}
+		}
+
+		allNodeInfo.clear();
+		allNodeInfo.addAll(newList);
+		allNodeInfo.addAll(newList2);
+		if (newList2.size() > 0) {
+			predecessorInfo = newList2.get(newList2.size()-1);
+		} else {
+			predecessorInfo = newList.get(newList.size()-1);
+		}
+
+		updateRemoveSuccessorTable(deadNode);
+		System.out.println("ZABOD");
 	}
 
 	/**
@@ -484,7 +558,6 @@ public class ChordState implements Runnable{
 	// Ping predecessor for health check
 	@Override
 	public void run() {
-		boolean alreadySent = false;
 		while (true) {
 			int port = AppConfig.chordState.healthPort.get();
 			// Don't check the health for myself!
@@ -498,9 +571,14 @@ public class ChordState implements Runnable{
 						// Restructure the system and inform others!
 						System.out.println("DEEEEEEEEEEEAAAAAAAAAAAAAAAAAAAAAATHHHHHHHHHHHHHHH " + port);
 						AppConfig.timestampedStandardPrint("Hazard! Predecessor " + port + " died!");
-					} else if (!alreadySent && System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.weakLimit) {
+						AppConfig.chordState.predecessorConfirmedDead.set(false);
+
+						System.out.println("DEADDDDDDZOOOOOOOOOOOOONEEEEEEEEEEEEEEEEEEEEEEEEEEE " + AppConfig.chordState.getPredecessor().getListenerPort());
+						FailureChordHandler.restructure(AppConfig.chordState.backup.get(AppConfig.chordState.getPredecessor().getListenerPort()), AppConfig.chordState.getPredecessor());
+
+					} else if (!AppConfig.chordState.alreadySent.get() && System.currentTimeMillis() >= lastPredecessorHealthCheck + AppConfig.weakLimit) {
 						AppConfig.timestampedStandardPrint("Warning! Predecessor " + port + " passed weak limit for health check!");
-						alreadySent = true;
+						AppConfig.chordState.alreadySent.set(true);
 						AppConfig.chordState.predecessorConfirmedDead.set(true);
 						MessageUtil.sendMessage(new IsReallyDeadMessage(AppConfig.myServentInfo.getListenerPort(), AppConfig.chordState.backup.get(port).getPredecessorInfo().getListenerPort(), port, false, false));
 					}

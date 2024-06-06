@@ -25,91 +25,92 @@ public class NewNodeHandler implements MessageHandler {
     @Override
     public void run() {
         if (clientMessage.getMessageType() == MessageType.NEW_NODE) {
-            synchronized (AppConfig.chordState.chordSync) {
+            synchronized (AppConfig.chordState.restructureSync) {
+                synchronized (AppConfig.chordState.chordSync) {
 
-                // Request token for critical section
-                int serventNum = AppConfig.myServentInfo.getId();
-                synchronized (AppConfig.chordState.tokenRequestsLock) {
-                    AppConfig.chordState.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum) + 1);
-                    if ((AppConfig.chordState.token == null)) {
-                        for (int i = 0; i < AppConfig.SERVENT_COUNT; i++) {
-                            if (i == serventNum)continue;
-                            System.out.println("SENDING TOKEN REQUEST TO " + AppConfig.getInfoById(i).getListenerPort() + " NUMBER " + AppConfig.chordState.tokenRequests.get(serventNum) + " AND I AM ID " + serventNum);
-                            TokenRequestMessage tokenRequestMessage = new TokenRequestMessage(MessageType.TOKEN_REQUEST, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(i).getListenerPort(), serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
-                            MessageUtil.sendMessage(tokenRequestMessage);
-                        }
-                    }
-                }
-                // Wait for the token
-                System.out.println("GETTING TOKEN");
-                synchronized (AppConfig.chordState.tokenRequestsLock) {
-                    while (AppConfig.chordState.token == null) {
-                        try {
-                            System.out.println("WAITING FOR TOKEN");
-                            AppConfig.chordState.tokenRequestsLock.wait();
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-                // Token received!
-                System.out.println("GOT TOKEN");
-
-                int newNodePort = clientMessage.getSenderPort();
-                ServentInfo newNodeInfo = new ServentInfo(AppConfig.myServentInfo.getIpAddress(), newNodePort, AppConfig.getIdByPort(newNodePort));
-
-                //check if the new node collides with another existing node.
-                if (AppConfig.chordState.isCollision(newNodeInfo.getChordId())) {
-                    System.out.println("COLLISION :(");
-                    Message sry = new SorryMessage(AppConfig.myServentInfo.getListenerPort(), clientMessage.getSenderPort());
-                    MessageUtil.sendMessage(sry);
-                    // Inform bootstrap he can continue adding chords
-                    try {
-                        Socket bsSocket = new Socket(AppConfig.myServentInfo.getIpAddress(), AppConfig.BOOTSTRAP_PORT);
-
-                        PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
-                        bsWriter.write("Sorry\n" + AppConfig.myServentInfo.getListenerPort() + "\n");
-                        bsWriter.flush();
-
-                        bsSocket.close();
-                    } catch (UnknownHostException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    // Request token for critical section
+                    int serventNum = AppConfig.myServentInfo.getId();
                     synchronized (AppConfig.chordState.tokenRequestsLock) {
-                        AppConfig.chordState.token.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
-                        // Append requests in order
-                        for (Entry<Integer, Integer> tokenRequest : AppConfig.chordState.tokenRequests.entrySet()) {
-                            if (tokenRequest.getValue() == AppConfig.chordState.token.tokenRequests.get(tokenRequest.getKey()) + 1
-                                    && !AppConfig.chordState.token.queue.contains(tokenRequest.getKey())) {
-                                AppConfig.chordState.token.queue.add(tokenRequest.getKey());
+                        AppConfig.chordState.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum) + 1);
+                        if ((AppConfig.chordState.token == null)) {
+                            for (int i = 0; i < AppConfig.SERVENT_COUNT; i++) {
+                                if (i == serventNum) continue;
+                                System.out.println("SENDING TOKEN REQUEST TO " + AppConfig.getInfoById(i).getListenerPort() + " NUMBER " + AppConfig.chordState.tokenRequests.get(serventNum) + " AND I AM ID " + serventNum);
+                                TokenRequestMessage tokenRequestMessage = new TokenRequestMessage(MessageType.TOKEN_REQUEST, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(i).getListenerPort(), serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
+                                MessageUtil.sendMessage(tokenRequestMessage);
+                            }
+                        }
+                    }
+                    // Wait for the token
+                    System.out.println("GETTING TOKEN");
+                    synchronized (AppConfig.chordState.tokenRequestsLock) {
+                        while (AppConfig.chordState.token == null) {
+                            try {
+                                System.out.println("WAITING FOR TOKEN");
+                                AppConfig.chordState.tokenRequestsLock.wait();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                    // Token received!
+                    System.out.println("GOT TOKEN");
+
+                    int newNodePort = clientMessage.getSenderPort();
+                    ServentInfo newNodeInfo = new ServentInfo(AppConfig.myServentInfo.getIpAddress(), newNodePort, AppConfig.getIdByPort(newNodePort));
+
+                    //check if the new node collides with another existing node.
+                    if (AppConfig.chordState.isCollision(newNodeInfo.getChordId())) {
+                        System.out.println("COLLISION :(");
+                        Message sry = new SorryMessage(AppConfig.myServentInfo.getListenerPort(), clientMessage.getSenderPort());
+                        MessageUtil.sendMessage(sry);
+                        // Inform bootstrap he can continue adding chords
+                        try {
+                            Socket bsSocket = new Socket(AppConfig.myServentInfo.getIpAddress(), AppConfig.BOOTSTRAP_PORT);
+
+                            PrintWriter bsWriter = new PrintWriter(bsSocket.getOutputStream());
+                            bsWriter.write("Sorry\n" + AppConfig.myServentInfo.getListenerPort() + "\n");
+                            bsWriter.flush();
+
+                            bsSocket.close();
+                        } catch (UnknownHostException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        synchronized (AppConfig.chordState.tokenRequestsLock) {
+                            AppConfig.chordState.token.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
+                            // Append requests in order
+                            for (Entry<Integer, Integer> tokenRequest : AppConfig.chordState.tokenRequests.entrySet()) {
+                                if (tokenRequest.getValue() == AppConfig.chordState.token.tokenRequests.get(tokenRequest.getKey()) + 1
+                                        && !AppConfig.chordState.token.queue.contains(tokenRequest.getKey())) {
+                                    AppConfig.chordState.token.queue.add(tokenRequest.getKey());
+                                }
+                            }
+
+
+                            // Give token to the first chord in queue
+                            if (!AppConfig.chordState.token.queue.isEmpty()) {
+                                int sendTokenTo = AppConfig.chordState.token.queue.remove();
+                                System.out.println("GIVING TOKEN TO " + AppConfig.getInfoById(sendTokenTo).getListenerPort());
+                                TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(sendTokenTo).getListenerPort(), AppConfig.chordState.token);
+                                MessageUtil.sendMessage(tokenMessage);
+                                // I sent the token and don't have it anymore
+                                AppConfig.chordState.token = null;
                             }
                         }
 
-
-                        // Give token to the first chord in queue
-                        if (!AppConfig.chordState.token.queue.isEmpty()) {
-                            int sendTokenTo = AppConfig.chordState.token.queue.remove();
-                            System.out.println("GIVING TOKEN TO " + AppConfig.getInfoById(sendTokenTo).getListenerPort());
-                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), AppConfig.getInfoById(sendTokenTo).getListenerPort(), AppConfig.chordState.token);
-                            MessageUtil.sendMessage(tokenMessage);
-                            // I sent the token and don't have it anymore
-                            AppConfig.chordState.token = null;
-                        }
+                        return;
                     }
 
-                    return;
-                }
-
-                //check if he is my predecessor
-                boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
+                    //check if he is my predecessor
+                    boolean isMyPred = AppConfig.chordState.isKeyMine(newNodeInfo.getChordId());
                     if (isMyPred) { //if yes, prepare and send welcome message
                         Map<Integer, MyFile> hisValues = new HashMap<>();
                         ServentInfo hisPred = null;
 
-                        synchronized(AppConfig.chordState.successorLock) {
+                        synchronized (AppConfig.chordState.successorLock) {
                             hisPred = AppConfig.chordState.getPredecessor();
                             if (hisPred == null) {
                                 hisPred = AppConfig.myServentInfo;
@@ -174,7 +175,7 @@ public class NewNodeHandler implements MessageHandler {
                         WelcomeMessage wm = new WelcomeMessage(AppConfig.myServentInfo.getListenerPort(), newNodePort, hisValues);
                         MessageUtil.sendMessage(wm);
                         // Wait for all the update messages to finish
-                        synchronized (AppConfig.chordState.updatesSync){
+                        synchronized (AppConfig.chordState.updatesSync) {
                             try {
                                 System.out.println("WAITING FOR UPDATES");
                                 AppConfig.chordState.updatesSync.wait();
@@ -206,31 +207,32 @@ public class NewNodeHandler implements MessageHandler {
                                 AppConfig.chordState.token = null;
                             }
                         }
-                } else { //if he is not my predecessor, let someone else take care of it
-                    ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(newNodeInfo.getChordId());
-                    System.out.println("NOT MY NODE, SENDING TO " + nextNode.getListenerPort());
-                    NewNodeMessage nnm = new NewNodeMessage(newNodePort, nextNode.getListenerPort());
-                    MessageUtil.sendMessage(nnm);
+                    } else { //if he is not my predecessor, let someone else take care of it
+                        ServentInfo nextNode = AppConfig.chordState.getNextNodeForKey(newNodeInfo.getChordId());
+                        System.out.println("NOT MY NODE, SENDING TO " + nextNode.getListenerPort());
+                        NewNodeMessage nnm = new NewNodeMessage(newNodePort, nextNode.getListenerPort());
+                        MessageUtil.sendMessage(nnm);
 
-                    synchronized (AppConfig.chordState.tokenRequestsLock) {
-                        AppConfig.chordState.token.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
-                        // Append requests in order
-                        for (Entry<Integer, Integer> tokenRequest : AppConfig.chordState.tokenRequests.entrySet()) {
-                            if (tokenRequest.getValue() == AppConfig.chordState.token.tokenRequests.get(tokenRequest.getKey()) + 1
-                                    && !AppConfig.chordState.token.queue.contains(tokenRequest.getKey())) {
-                                AppConfig.chordState.token.queue.add(tokenRequest.getKey());
+                        synchronized (AppConfig.chordState.tokenRequestsLock) {
+                            AppConfig.chordState.token.tokenRequests.put(serventNum, AppConfig.chordState.tokenRequests.get(serventNum));
+                            // Append requests in order
+                            for (Entry<Integer, Integer> tokenRequest : AppConfig.chordState.tokenRequests.entrySet()) {
+                                if (tokenRequest.getValue() == AppConfig.chordState.token.tokenRequests.get(tokenRequest.getKey()) + 1
+                                        && !AppConfig.chordState.token.queue.contains(tokenRequest.getKey())) {
+                                    AppConfig.chordState.token.queue.add(tokenRequest.getKey());
+                                }
                             }
-                        }
 
 
-                        // Give token to the first chord in queue
-                        if (!AppConfig.chordState.token.queue.isEmpty()) {
-                            //int sendTokenTo = AppConfig.chordState.token.queue.remove();
-                            System.out.println("GIVING TOKEN TO " + nextNode.getListenerPort());
-                            TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), AppConfig.chordState.token);
-                            MessageUtil.sendMessage(tokenMessage);
-                            // I sent the token and don't have it anymore
-                            AppConfig.chordState.token = null;
+                            // Give token to the first chord in queue
+                            if (!AppConfig.chordState.token.queue.isEmpty()) {
+                                //int sendTokenTo = AppConfig.chordState.token.queue.remove();
+                                System.out.println("GIVING TOKEN TO " + nextNode.getListenerPort());
+                                TokenMessage tokenMessage = new TokenMessage(MessageType.TOKEN, AppConfig.myServentInfo.getListenerPort(), nextNode.getListenerPort(), AppConfig.chordState.token);
+                                MessageUtil.sendMessage(tokenMessage);
+                                // I sent the token and don't have it anymore
+                                AppConfig.chordState.token = null;
+                            }
                         }
                     }
                 }
