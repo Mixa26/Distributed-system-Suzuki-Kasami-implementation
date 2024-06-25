@@ -1,1 +1,8 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/_usaz5p7)
+# Suzuki-Kasami implementation
+
+This project is an implementation of the Suzuki-Kasami token based distributed systems algorithm.<br>
+The base is a chord system which is holding servents (server and client at the same time) which<br>
+work with textual files. Suzuki-Kasami ensures only one added servent is adding another servent at a time<br>
+and that it doesn't interfere with file adding. System also implement a fail recovery system<br>
+which in ideal situations should make the system readjust after a servent has died. For more information<br>
+a documentation file in serbian is provided.
